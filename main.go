@@ -5,7 +5,10 @@ import (
 )
 
 func main() {
-	tutorial.Echo1()
-	tutorial.Echo2()
-	tutorial.Echo3()
+	//tutorial.Echo1()
+	//tutorial.Echo2()
+	//tutorial.Echo3()
+	//tutorial.Lissajous1(os.Stdout)
+	//tutorial.Lissajous2(os.Stdout)
+	tutorial.Dup2()
 }
