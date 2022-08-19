@@ -11,5 +11,7 @@ func main() {
 	//tutorial.Lissajous2(os.Stdout)
 	//tutorial.Fetch1()
 	//tutorial.Fetch2()
-	tutorial.Fetch3()
+	//tutorial.Fetch3()
+	//tutorial.FetchAll1()
+	tutorial.FetchAll2()
 }
