@@ -13,5 +13,6 @@ func main() {
 	//tutorial.Fetch2()
 	//tutorial.Fetch3()
 	//tutorial.FetchAll1()
-	tutorial.FetchAll2()
+	//tutorial.FetchAll2()
+	tutorial.Serve()
 }
