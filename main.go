@@ -2,9 +2,9 @@ package main
 
 import (
 	//tutorial "github.com/maxsargentdev/the-go-programming-language/1-tutorial"
-	"fmt"
+	//"fmt"
 
-	tempconv "github.com/maxsargentdev/the-go-programming-language/2-program-structure/2.1"
+	conv "github.com/maxsargentdev/the-go-programming-language/2-program-structure/2.2"
 )
 
 func main() {
@@ -21,5 +21,5 @@ func main() {
 	//tutorial.FetchAll2()
 	//tutorial.Serve()
 	//programstructure.RunMe()
-	fmt.Println(tempconv.KtoF(0))
+	conv.Convert()
 }
