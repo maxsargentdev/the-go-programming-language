@@ -4,7 +4,7 @@ import (
 	//tutorial "github.com/maxsargentdev/the-go-programming-language/1-tutorial"
 	//"fmt"
 
-	conv "github.com/maxsargentdev/the-go-programming-language/2-program-structure/2.2"
+	basicdatatypes "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/3.1"
 )
 
 func main() {
@@ -21,5 +21,10 @@ func main() {
 	//tutorial.FetchAll2()
 	//tutorial.Serve()
 	//programstructure.RunMe()
-	conv.Convert()
+	// fmt.Println(popcount.PopCount(1000100001))
+	// fmt.Println(popcount.PopCount2(1000100001))
+	// fmt.Println(popcount.PopCount3(1000100001))
+	// fmt.Println(popcount.PopCount4(1000100001))
+	basicdatatypes.Surface()
+
 }
