@@ -26,7 +26,8 @@ func main() {
 	// fmt.Println(popcount.PopCount3(1000100001))
 	// fmt.Println(popcount.PopCount4(1000100001))
 	//basicdatatypes.Surface()
-	//basicdatatypes.Surface2()
-	basicdatatypes.Surface3()
+	//abasicdatatypes.Surface2()
+	//basicdatatypes.Surface3()
+	basicdatatypes.Serve()
 
 }
