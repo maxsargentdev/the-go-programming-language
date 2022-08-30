@@ -4,7 +4,7 @@ import (
 	//tutorial "github.com/maxsargentdev/the-go-programming-language/1-tutorial"
 	//"fmt"
 
-	basicdatatypes "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types"
+	mandelbrot "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/mandlebrot"
 )
 
 func main() {
@@ -28,6 +28,7 @@ func main() {
 	//basicdatatypes.Surface()
 	//abasicdatatypes.Surface2()
 	//basicdatatypes.Surface3()
-	basicdatatypes.Serve()
+	//basicdatatypes.Serve()
+	mandelbrot.Render()
 
 }
