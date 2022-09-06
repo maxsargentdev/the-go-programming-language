@@ -29,6 +29,6 @@ func main() {
 	//abasicdatatypes.Surface2()
 	//basicdatatypes.Surface3()
 	//basicdatatypes.Serve()
-	mandelbrot.RenderNewton()
+	mandelbrot.RenderAll()
 
 }
