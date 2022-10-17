@@ -4,7 +4,8 @@ import (
 	//tutorial "github.com/maxsargentdev/the-go-programming-language/1-tutorial"
 	//"fmt"
 
-	mandelbrot "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/mandlebrot"
+	//mandelbrot "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/mandlebrot"
+	comma "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/comma"
 )
 
 func main() {
@@ -29,6 +30,10 @@ func main() {
 	//abasicdatatypes.Surface2()
 	//basicdatatypes.Surface3()
 	//basicdatatypes.Serve()
-	mandelbrot.RenderAll()
+	//mandelbrot.RenderAll()
+	comma.Comma("123")
+	comma.Comma("1234567890")
+	comma.Comma("1")
+	comma.Comma("123456")
 
 }
