@@ -3,21 +3,32 @@ package comma
 import (
 	"bytes"
 	"fmt"
+	"strings"
 )
 
-func Comma(inputString string) {
+func CommaFloatingP(inputString string) {
+	const chunkSize = 3
 	var buf bytes.Buffer
 	var sLength = len(inputString)
+	var suffix = ""
+	var firstCharacter = inputString[0:1]
+	var signed = strings.ContainsAny(firstCharacter, "+-")
+	var floatingPoint = strings.ContainsAny(inputString, ".")
+	var floatingPointIndex = strings.Index(inputString, ".")
+	var chunkCount = sLength / chunkSize
+	var remainderCount = sLength % chunkSize
 
-	const chunkSize = 3
-
-	if sLength <= chunkSize {
-		fmt.Println(inputString)
-		return
+	if signed {
+		buf.WriteString(firstCharacter)
+		inputString = inputString[1:]
+		sLength--
 	}
 
-	chunkCount := sLength / chunkSize
-	remainderCount := sLength % chunkSize
+	if floatingPoint {
+		suffix = inputString[floatingPointIndex-1:]
+		inputString = inputString[:sLength-len(suffix)]
+		sLength -= len(suffix)
+	}
 
 	for i := 0; i < chunkCount; i++ {
 
@@ -44,6 +55,9 @@ func Comma(inputString string) {
 		buf.WriteString(string(inputString[frontIndex:rearIndex])) // write the remaining parts
 	}
 
+	if floatingPoint {
+		buf.WriteString(suffix)
+	}
+
 	fmt.Println(buf.String())
-	return
 }

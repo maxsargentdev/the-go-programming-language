@@ -31,9 +31,8 @@ func main() {
 	//basicdatatypes.Surface3()
 	//basicdatatypes.Serve()
 	//mandelbrot.RenderAll()
-	comma.Comma("123")
-	comma.Comma("1234567890")
-	comma.Comma("1")
-	comma.Comma("123456")
-
+	comma.CommaFloatingP(("12.12345"))
+	comma.CommaFloatingP(("-12"))
+	comma.CommaFloatingP("-123.1")
+	comma.CommaFloatingP("-12345.123")
 }
