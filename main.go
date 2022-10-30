@@ -5,7 +5,11 @@ import (
 	//"fmt"
 
 	//mandelbrot "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/mandlebrot"
-	comma "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/comma"
+	// comma "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/comma"
+	// anagram "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/anagram"
+	//iota "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/iota"
+	// arrays "github.com/maxsargentdev/the-go-programming-language/4-composite-datatypes/arrays"
+	"github.com/maxsargentdev/the-go-programming-language/4-composite-types/arrays"
 )
 
 func main() {
@@ -31,8 +35,11 @@ func main() {
 	//basicdatatypes.Surface3()
 	//basicdatatypes.Serve()
 	//mandelbrot.RenderAll()
-	comma.CommaFloatingP(("12.12345"))
-	comma.CommaFloatingP(("-12"))
-	comma.CommaFloatingP("-123.1")
-	comma.CommaFloatingP("-12345.123")
+	// comma.CommaFloatingP(("12.12345"))
+	// comma.CommaFloatingP(("-12"))
+	// comma.CommaFloatingP("-123.1")
+	// comma.CommaFloatingP("-12345.123")
+	// anagram.Anagram("maxrocksa", "rocksmaxa")
+
+	arrays.SHAzam()
 }
