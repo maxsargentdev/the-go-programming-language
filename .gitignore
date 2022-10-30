@@ -19,8 +19,5 @@
 
 .idea/**/*
 
-# Ignore binary
-the-go-programming-language
-
 # Ignore vscode files
 **/.vscode/**/*

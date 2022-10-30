@@ -1,18 +1,33 @@
 package main
 
-import (
-	//tutorial "github.com/maxsargentdev/the-go-programming-language/1-tutorial"
+import ( //tutorial "github.com/maxsargentdev/the-go-programming-language/1-tutorial"
 	//"fmt"
-
 	//mandelbrot "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/mandlebrot"
 	// comma "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/comma"
 	// anagram "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/anagram"
 	//iota "github.com/maxsargentdev/the-go-programming-language/3-basic-data-types/iota"
 	// arrays "github.com/maxsargentdev/the-go-programming-language/4-composite-datatypes/arrays"
+	"flag"
+
+	tutorial "github.com/maxsargentdev/the-go-programming-language/1-tutorial"
 	"github.com/maxsargentdev/the-go-programming-language/4-composite-types/arrays"
 )
 
+var exerciseSelector string
+
+func init() {
+	flag.StringVar(&exerciseSelector, "ex", "1.1", "Which exercise to demonstrate, --ex")
+}
+
 func main() {
+	flag.Parse()
+
+	switch exerciseSelector {
+	case "1.1":
+		tutorial.Echo1()
+	case "4.2":
+		arrays.SHAzam()
+	}
 	//tutorial.Echo1()
 	//tutorial.Echo2()
 	//tutorial.Echo3()
@@ -40,6 +55,4 @@ func main() {
 	// comma.CommaFloatingP("-123.1")
 	// comma.CommaFloatingP("-12345.123")
 	// anagram.Anagram("maxrocksa", "rocksmaxa")
-
-	arrays.SHAzam()
 }
