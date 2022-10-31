@@ -41,11 +41,13 @@ A  CLI for demonstrating the exercises found in 'The Go Programming Langauge'.
 
 Execute as so:
 
-<binary> <chapter> <exercise>
+<binary> c<chapter number>e<exercise number>
 
 Example:
 
-./the-go-programming-language tutorial 1
+./the-go-programming-language c1e1
+
+For the first exercise of the first chapter.
 
 --------------------------------------------------------------------------------------------------------
 	`,
