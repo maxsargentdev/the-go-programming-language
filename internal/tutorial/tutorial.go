@@ -6,10 +6,12 @@ import (
 	"strings"
 )
 
-func Echo1() {
-	fmt.Println(strings.Join(os.Args[1:], " "))
+func EchoWithCommandName() {
+	fmt.Println(strings.Join(os.Args[0:], " "))
 }
 
-func Echo2() {
-	fmt.Println(strings.Join(os.Args[0:], " "))
+func EchoWithIndexAndValue() {
+	for i := 0; i < len(os.Args); i++ {
+		fmt.Printf("index[%d] - arg[%s]\n", i, os.Args[i])
+	}
 }
