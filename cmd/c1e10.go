@@ -6,6 +6,7 @@ package cmd
 
 import (
 	"fmt"
+	"the-go-programming-language/internal/tutorial"
 
 	"github.com/spf13/cobra"
 )
@@ -22,6 +23,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("c1e10 called")
+		tutorial.PrintFetchAll() // provide list via flag with default, use short list
 	},
 }
 
