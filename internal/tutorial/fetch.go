@@ -11,8 +11,8 @@ import (
 )
 
 // 1.7
-func BasicFetch() {
-	for _, url := range os.Args[1:] {
+func BasicFetch(urls []string) {
+	for _, url := range urls {
 		resp, err := http.Get(url)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "fetch : %v\n", err)
@@ -30,8 +30,8 @@ func BasicFetch() {
 //
 
 // 1.8
-func PrefixCheckFetch() {
-	for _, url := range os.Args[1:] {
+func PrefixCheckFetch(urls []string) {
+	for _, url := range urls {
 		if !strings.HasPrefix(url, "http://") {
 			url = fmt.Sprintf("http://%s", url)
 		}
@@ -53,8 +53,8 @@ func PrefixCheckFetch() {
 //
 
 // 1.9
-func StatusCodePrefixCheckFetch() {
-	for _, url := range os.Args[1:] {
+func StatusCodePrefixCheckFetch(urls []string) {
+	for _, url := range urls {
 		if !strings.HasPrefix(url, "http://") {
 			url = fmt.Sprintf("http://%s", url)
 		}
@@ -77,20 +77,20 @@ func StatusCodePrefixCheckFetch() {
 //
 
 // 1.10
-func PrintFetchAll() {
+func PrintFetchAll(urls []string) {
 	start := time.Now()
 	ch := make(chan string)
 
-	for _, url := range os.Args[2:] { // skip first arg its subcommand
-		go fetch(url, ch)
+	for _, url := range urls { // skip first arg its subcommand
+		go fetchGoRoutine(url, ch)
 	}
-	for range os.Args[1:] {
+	for range urls {
 		fmt.Println(<-ch)
 	}
 	fmt.Printf("%.2fs elapsed\n", time.Since(start).Seconds())
 }
 
-func fetch(url string, ch chan<- string) {
+func fetchGoRoutine(url string, ch chan<- string) {
 	start := time.Now()
 	resp, err := http.Get(url)
 

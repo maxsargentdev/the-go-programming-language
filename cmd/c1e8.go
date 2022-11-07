@@ -5,11 +5,12 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
 	"the-go-programming-language/internal/tutorial"
 
 	"github.com/spf13/cobra"
 )
+
+var c1e8urls []string
 
 // c1e8Cmd represents the c1e8 command
 var c1e8Cmd = &cobra.Command{
@@ -22,14 +23,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c1e8 called")
-		tutorial.PrefixCheckFetch()
+		tutorial.PrefixCheckFetch(c1e8urls)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c1e8Cmd)
-
+	c1e8Cmd.Flags().StringSliceVarP(&c1e8urls, "urls", "u", []string{"www.google.com"}, "An comma separated string of URLs")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

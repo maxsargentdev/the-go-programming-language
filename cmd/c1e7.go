@@ -11,6 +11,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var c1e7urls []string
+
 // c1e7Cmd represents the c1e7 command
 var c1e7Cmd = &cobra.Command{
 	Use:   "c1e7",
@@ -23,12 +25,13 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("c1e7 called")
-		tutorial.BasicFetch()
+		tutorial.BasicFetch(c1e7urls)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c1e7Cmd)
+	c1e7Cmd.Flags().StringSliceVarP(&c1e7urls, "urls", "u", []string{"https://www.google.com"}, "An comma separated string of URLs")
 
 	// Here you will define your flags and configuration settings.
 
