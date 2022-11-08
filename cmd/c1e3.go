@@ -13,7 +13,7 @@ import (
 // c1e3Cmd represents the c1e3 command
 var c1e3Cmd = &cobra.Command{
 	Use:   "c1e3",
-	Short: "A brief description of your command",
+	Short: "Chapter 1 Exercise 3 - Difference in running times of echo programs",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

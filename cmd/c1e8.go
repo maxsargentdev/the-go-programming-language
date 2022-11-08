@@ -15,7 +15,7 @@ var c1e8urls []string
 // c1e8Cmd represents the c1e8 command
 var c1e8Cmd = &cobra.Command{
 	Use:   "c1e8",
-	Short: "A brief description of your command",
+	Short: "Chapter 1 Exercise 8 - Fetch which checks for HTTP prefix",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

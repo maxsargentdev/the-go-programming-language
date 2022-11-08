@@ -14,7 +14,7 @@ import (
 // c1e6Cmd represents the c1e6 command
 var c1e6Cmd = &cobra.Command{
 	Use:   "c1e6",
-	Short: "A brief description of your command",
+	Short: "Chapter 1 Exercise 6 - Multicoloured Lissajous",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

@@ -16,7 +16,7 @@ var c1e9urls []string
 // c1e9Cmd represents the c1e9 command
 var c1e9Cmd = &cobra.Command{
 	Use:   "c1e9",
-	Short: "A brief description of your command",
+	Short: "Chapter 1 Exercise 9 - Fetch with status code",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

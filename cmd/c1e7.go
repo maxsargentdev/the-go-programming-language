@@ -16,7 +16,7 @@ var c1e7urls []string
 // c1e7Cmd represents the c1e7 command
 var c1e7Cmd = &cobra.Command{
 	Use:   "c1e7",
-	Short: "A brief description of your command",
+	Short: "Chapter 1 Exercise 7 - Fetch using io.Copy(dst,src)",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

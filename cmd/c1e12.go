@@ -13,7 +13,7 @@ import (
 // c1e12Cmd represents the c1e12 command
 var c1e12Cmd = &cobra.Command{
 	Use:   "c1e12",
-	Short: "A brief description of your command",
+	Short: "Chapter 1 Exercise 12 - Lissajous web server",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

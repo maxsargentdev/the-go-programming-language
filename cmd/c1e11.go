@@ -15,7 +15,7 @@ var c1e11urls []string
 // c1e11Cmd represents the c1e11 command
 var c1e11Cmd = &cobra.Command{
 	Use:   "c1e11",
-	Short: "A brief description of your command",
+	Short: "Chapter 1 Exercise 11 - Concurrent fetch with longer argument list",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 

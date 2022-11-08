@@ -13,7 +13,7 @@ import (
 // c1e4Cmd represents the c1e4 command
 var c1e4Cmd = &cobra.Command{
 	Use:   "c1e4",
-	Short: "A brief description of your command",
+	Short: "Chapter 1 Exercise 4 - Modified dup2, print names of all files with duplicate lines",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
 
