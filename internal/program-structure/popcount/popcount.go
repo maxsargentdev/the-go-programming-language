@@ -1,6 +1,9 @@
 package popcount
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 var pc [256]byte
 
@@ -11,7 +14,8 @@ func init() {
 } // pc is a table of results for popcount
 
 func PopCount(x uint64) int { // 8 bytes in a uint64
-	return int(pc[byte(x>>(0*8))] +
+	start := time.Now()
+	popcount := int(pc[byte(x>>(0*8))] +
 		pc[byte(x>>(1*8))] +
 		pc[byte(x>>(2*8))] +
 		pc[byte(x>>(3*8))] +
@@ -19,44 +23,52 @@ func PopCount(x uint64) int { // 8 bytes in a uint64
 		pc[byte(x>>(5*8))] +
 		pc[byte(x>>(6*8))] +
 		pc[byte(x>>(7*8))])
+	fmt.Printf("PopCount - %d nanoseconds elapsed\n", time.Since(start).Nanoseconds())
+	return popcount
 }
 
-func PopCount2(x uint64) int {
+func LoopPopCount(x uint64) int {
+	start := time.Now()
 	popcount := 0
 	for i := 0; i < 8; i++ {
 		popcount += int(pc[byte(x>>(i*8))])
 	}
+	fmt.Printf("LoopPopCount - %d nanoseconds elapsed\n", time.Since(start).Nanoseconds())
 	return popcount
 }
 
-func PopCount3(x uint64) int {
-	output := ""
+func BitShiftPopCount(x uint64) int {
+	start := time.Now()
+	// output := ""
 	popcount := 0
 	for i := 0; i < 64; i++ {
 		if x&1 != 0 { // this is a bitwise AND operatian against 1 in binary
 			popcount++ // it is equivalent to usig a bit mask!
 		}
-		output += fmt.Sprint(x & 1) // same again here
+		// output += fmt.Sprint(x & 1) // same again here
 		x = x >> 1
 	}
-	fmt.Println(output)
+	// fmt.Println(output)
+	fmt.Printf("BitShiftPopcount - %d nanoseconds elapsed\n", time.Since(start).Nanoseconds())
 	return popcount
 }
 
 // Bitwise AND of x & x-1
 // Zeros out right most bit, see output below
-func PopCount4(x uint64) int {
+func BitMaskPopCount(x uint64) int {
+	start := time.Now()
 	//output := ""
 	popcount := 0
 	for x != 0 {
-		fmt.Printf("x          = %b\n", x)
+		// fmt.Printf("x          = %b\n", x)
 		x = x & (x - 1) // AND x with x-1, x-1 will always not mask with x and drop a bit
 		//output += fmt.Sprint(x) // output here will be strange as not poaching the last bit anymore
 		// it will just be a concatenation of numbers
-		fmt.Printf("x & (x -1) = %b\n", x)
-		fmt.Println("--------------------------------------------------------------")
+		// fmt.Printf("x & (x -1) = %b\n", x)
+		// fmt.Println("--------------------------------------------------------------")
 		popcount++
 	} // you essentially are just removing bits untul you get to 0
+	fmt.Printf("BitMaskPopcount - %d nanoseconds elapsed\n", time.Since(start).Nanoseconds())
 	return popcount
 }
 

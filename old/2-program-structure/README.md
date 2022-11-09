@@ -1,1 +1,0 @@
-The popcount, or 'hamming weight' are the number of set its in a binary number.

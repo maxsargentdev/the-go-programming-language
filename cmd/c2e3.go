@@ -5,7 +5,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
+	"the-go-programming-language/internal/program-structure/popcount"
 
 	"github.com/spf13/cobra"
 )
@@ -21,7 +21,9 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c2e3 called")
+		popcount.PopCount(1)
+		popcount.LoopPopCount(1)
+
 	},
 }
 
