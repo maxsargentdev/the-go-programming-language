@@ -23,3 +23,6 @@
 **/.vscode/**/*
 
 the-go-programming-language
+
+*.png
+*.svg
