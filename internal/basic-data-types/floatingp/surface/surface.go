@@ -1,4 +1,4 @@
-package floatingp
+package surface
 
 import (
 	"errors"
