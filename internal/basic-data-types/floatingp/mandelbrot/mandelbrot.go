@@ -5,6 +5,7 @@ import (
 	"image"
 	"image/color"
 	"image/png"
+	"io"
 	"math"
 	"math/big"
 	"math/cmplx"
@@ -157,6 +158,38 @@ func renderType(rendertype string) {
 	elapsed := time.Since(start)
 	fmt.Printf("%s took %s\n", rendertype, elapsed)
 	// write each one to a file with its name and time it
+}
+
+func renderTypeWithParams(out io.Writer, x float64, y float64, zoom string) {
+
+	const (
+		xmin, ymin, xmax, ymax = -2, -2, +2, +2
+		width, height          = 1024, 1024
+		// zoom                   = "low"
+	)
+
+	img := image.NewRGBA(image.Rect(0, 0, width, height))
+
+	for py := 0; py < height; py++ {
+		y := float64(py)/height*(ymax-ymin) + ymin
+		for px := 0; px < width; px++ {
+			x := float64(px)/width*(xmax-xmin) + xmin
+			z := complex(x, y)
+			// Image point (px, py) represents complex value z.
+			switch {
+			case zoom == "low":
+				img.Set(px, py, mandelbrot64(z))
+			case zoom == "medium":
+				img.Set(px, py, mandelbrot128(z))
+			case zoom == "high":
+				img.Set(px, py, mandelbrotBigFloat(z))
+			}
+		}
+	}
+
+	// Output image to webserver io.writer
+	png.Encode(out, img)
+
 }
 
 func mandelbrot64(z complex128) color.Color {
