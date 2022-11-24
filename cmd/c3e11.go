@@ -5,10 +5,12 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"fmt"
+	"the-go-programming-language/internal/basic-data-types/string/comma"
 
 	"github.com/spf13/cobra"
 )
+
+var c3e11input string
 
 // c3e11Cmd represents the c3e11 command
 var c3e11Cmd = &cobra.Command{
@@ -21,12 +23,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c3e11 called")
+		comma.CommaFloatingP(c3e11input)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c3e11Cmd)
+	c3e11Cmd.Flags().StringVarP(&c3e11input, "input", "i", "123456789.123456789", "Input number (string representation) to the floating point comma function") // need a much longer list to go here
 
 	// Here you will define your flags and configuration settings.
 
