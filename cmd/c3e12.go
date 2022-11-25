@@ -4,7 +4,7 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"the-go-programming-language/old/3-basic-data-types/anagram"
+	"the-go-programming-language/internal/basic-data-types/string/anagram"
 
 	"github.com/spf13/cobra"
 )
