@@ -1,14 +1,16 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
+	"the-go-programming-language/internal/composite-types/arrays"
 
 	"github.com/spf13/cobra"
 )
+
+var c4e1inputA string
+var c4e1inputB string
 
 // c4e1Cmd represents the c4e1 command
 var c4e1Cmd = &cobra.Command{
@@ -21,12 +23,14 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c4e1 called")
+		arrays.SHABitCompare(c4e1inputA, c4e1inputB)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c4e1Cmd)
+	c4e1Cmd.Flags().StringVarP(&c4e1inputA, "inputA", "A", "X", "Input string for first half of SHA checksum comparison")
+	c4e1Cmd.Flags().StringVarP(&c4e1inputB, "inputB", "B", "X", "Input string for second half of SHA checksum comparison")
 
 	// Here you will define your flags and configuration settings.
 

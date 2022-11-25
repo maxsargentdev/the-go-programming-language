@@ -5,9 +5,9 @@ import (
 	"fmt"
 )
 
-func SHABitCompare() {
-	c1 := sha256.Sum256([]byte("x"))
-	c2 := sha256.Sum256([]byte("X"))
+func SHABitCompare(stringA, stringB string) {
+	c1 := sha256.Sum256([]byte(stringA))
+	c2 := sha256.Sum256([]byte(stringB))
 
 	diffBitCount := 0
 	for i := 0; i < len(c2); i++ {
