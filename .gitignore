@@ -21,6 +21,7 @@
 
 # Ignore vscode files
 **/.vscode/**/*
+.vscode
 
 the-go-programming-language
 
