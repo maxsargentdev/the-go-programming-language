@@ -1,14 +1,16 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
+	"the-go-programming-language/old/3-basic-data-types/anagram"
 
 	"github.com/spf13/cobra"
 )
+
+var c3e12inputA string
+var c3e12inputB string
 
 // c3e12Cmd represents the c3e12 command
 var c3e12Cmd = &cobra.Command{
@@ -21,12 +23,14 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c3e12 called")
+		anagram.Anagram(c3e12inputA, c3e12inputB)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c3e12Cmd)
+	c3e12Cmd.Flags().StringVarP(&c3e12inputA, "inputA", "A", "racecar", "Input string for first half of anagram comparison")
+	c3e12Cmd.Flags().StringVarP(&c3e12inputB, "inputB", "B", "racecar", "Input string for second half of anagram comparison")
 
 	// Here you will define your flags and configuration settings.
 
