@@ -2,6 +2,8 @@ package arrays
 
 import (
 	"crypto/sha256"
+	"crypto/sha512"
+	"encoding/hex"
 	"fmt"
 )
 
@@ -35,4 +37,35 @@ func diffByte(b1, b2 byte) int {
 		// }
 	}
 	return count
+}
+
+const (
+	SHA256 string = "SHA256"
+	SHA384 string = "SHA312"
+	SHA512 string = "SHA512"
+)
+
+func SHAOutput(input string, shaSize string) {
+	switch shaSize {
+	case SHA256:
+		h := sha256.New()
+		h.Write([]byte(input))
+		hash := hex.EncodeToString(h.Sum(nil))
+		fmt.Println(hash)
+	case SHA384:
+		h := sha512.New384()
+		h.Write([]byte(input))
+		hash := hex.EncodeToString(h.Sum(nil))
+		fmt.Println(hash)
+	case SHA512:
+		h := sha512.New()
+		h.Write([]byte(input))
+		hash := hex.EncodeToString(h.Sum(nil))
+		fmt.Println(hash)
+	default:
+		h := sha256.New()
+		h.Write([]byte(input))
+		hash := hex.EncodeToString(h.Sum(nil))
+		fmt.Println(hash)
+	}
 }

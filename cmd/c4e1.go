@@ -29,8 +29,8 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(c4e1Cmd)
-	c4e1Cmd.Flags().StringVarP(&c4e1inputA, "inputA", "A", "X", "Input string for first half of SHA checksum comparison")
-	c4e1Cmd.Flags().StringVarP(&c4e1inputB, "inputB", "B", "X", "Input string for second half of SHA checksum comparison")
+	c4e1Cmd.Flags().StringVarP(&c4e1inputA, "inputA", "A", "X", "Input string for first half of SHA hash comparison")
+	c4e1Cmd.Flags().StringVarP(&c4e1inputB, "inputB", "B", "X", "Input string for second half of SHA hash comparison")
 
 	// Here you will define your flags and configuration settings.
 
