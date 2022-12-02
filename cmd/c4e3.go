@@ -21,7 +21,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// slices.Reverse([]int{1, 2, 3, 4, 5})
-		array := [5]int{1, 2, 3, 4, 5} // todo - this needs to be a arg
+		array := [5]int{1, 2, 3, 4, 5} // todo - this needs to be a arg, but its an array type so lets leave for now, pflags only uses slices
 		slices.ReverseUsingArrayPointer(&array)
 
 	},

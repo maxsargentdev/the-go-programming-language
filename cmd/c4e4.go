@@ -9,6 +9,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var c4e4inputSlice []int
+var c4e4inputInt int
+
 // c4e4Cmd represents the c4e4 command
 var c4e4Cmd = &cobra.Command{
 	Use:   "c4e4",
@@ -20,14 +23,14 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		slice := []int{1, 2, 3, 4, 5}
-		slices.RotateLeft(2, slice)
+		slices.RotateLeft(c4e4inputInt, c4e4inputSlice)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c4e4Cmd)
-
+	c4e4Cmd.Flags().IntVarP(&c4e4inputInt, "rotatepositions", "r", 2, "How many positions to roteate")
+	c4e4Cmd.Flags().IntSliceVarP(&c4e4inputSlice, "inputSLice", "i", []int{1, 2, 3, 4, 5}, "Input string slice for dedupe operation")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

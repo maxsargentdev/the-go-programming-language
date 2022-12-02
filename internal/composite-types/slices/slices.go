@@ -17,40 +17,32 @@ func ReverseUsingArrayPointer(ap *[5]int) { // they probably want us to do an in
 }
 
 func RotateLeft(positionCount int, s []int) {
-	// reverse(s[:2])
-	// reverse(s[2:])
-	// reverse(s)
-	// fmt.Println(s) // "[2 3 ` 5 0 1]"
-	// for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
-	// 	s[i], s[j] = s[j], s[i]
-	// }
 	// create empty slice
 	var result []int
 
-	// take 0 to position count, i.e the first 2 (1,2)
+	// take 0 to position count, i.e. the first 2 (1,2)
 	chunk := s[:positionCount]
 
-	// append to the empty slice the end, i.e the last 3 (3,4,5)
+	// append to the empty slice the end, i.e. the last 3 (3,4,5)
 	result = append(result, s[positionCount:]...)
+
 	// append to the (3,4,5) slice, gives you (3,4,5,1,2)
 	result = append(result, chunk...)
 
 	fmt.Println(result)
 }
 
-func RemoveAdjacentDups(s []string) {
-	slength := len(s)
-	// out := s[:0]
+func RemoveAdjacentDupes(s []string) {
+	length := len(s)
 	for i := 0; i < len(s)-1; i++ {
-		backwards := i - 1
-		frontwards := i + 1
+		backwards, frontwards := i-1, i+1
 
 		if backwards > 0 {
 			if s[i] == s[backwards] {
 				s = remove(s, backwards)
 			}
 		}
-		if frontwards < slength {
+		if frontwards < length {
 			if s[i] == s[frontwards] {
 				s = remove(s, frontwards)
 			}
@@ -61,7 +53,7 @@ func RemoveAdjacentDups(s []string) {
 	fmt.Println(s)
 }
 
-func remove(slice []string, i int) []string {
-	copy(slice[i:], slice[i+1:])
+func remove(slice []string, x int) []string {
+	copy(slice[x:], slice[x+1:])
 	return slice[:len(slice)-1]
 }

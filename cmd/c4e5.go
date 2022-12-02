@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var c4e5inputSlice []string
+
 // c4e5Cmd represents the c4e5 command
 var c4e5Cmd = &cobra.Command{
 	Use:   "c4e5",
@@ -20,14 +22,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		slice := []string{"one", "two", "two", "three", "four"}
-		slices.RemoveAdjacentDups(slice)
+		slices.RemoveAdjacentDupes(c4e5inputSlice)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c4e5Cmd)
-
+	c4e5Cmd.Flags().StringSliceVarP(&c4e5inputSlice, "input", "i", []string{"one", "two", "two", "three", "two", "three", "three", "three", "two", "four"}, "Input string slice for dedupe operation")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
