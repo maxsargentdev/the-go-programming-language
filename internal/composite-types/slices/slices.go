@@ -57,3 +57,26 @@ func remove(slice []string, x int) []string {
 	copy(slice[x:], slice[x+1:])
 	return slice[:len(slice)-1]
 }
+
+func removeByte(slice []byte, x int) []byte {
+	copy(slice[x:], slice[x+1:])
+	return slice[:len(slice)-1]
+}
+
+func SquashAdjacentUnicodeSpaces(s []byte) {
+	for pos, char := range s {
+		utf8Code := rune(char)
+		if utf8Code == 32 { // 32 is the int that corresponds to white
+			for {
+				frontwards := pos + 1
+				if rune(s[frontwards]) == 32 {
+					s = removeByte(s, frontwards)
+				} else {
+					break
+				}
+
+			}
+		}
+	}
+	fmt.Println(string(s))
+}

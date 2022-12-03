@@ -1,14 +1,15 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
+	"the-go-programming-language/internal/composite-types/slices"
 
 	"github.com/spf13/cobra"
 )
+
+var c4e6InputString string
 
 // c4e6Cmd represents the c4e6 command
 var c4e6Cmd = &cobra.Command{
@@ -21,12 +22,14 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c4e6 called")
+		bs := []byte(c4e6InputString)
+		slices.SquashAdjacentUnicodeSpaces(bs)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c4e6Cmd)
+	c4e6Cmd.Flags().StringVarP(&c4e6InputString, "input", "i", "I am a string with spaces     lots of them    thanks", "Input string slice for dedupe operation")
 
 	// Here you will define your flags and configuration settings.
 
