@@ -1,6 +1,10 @@
 package slices
 
-import "fmt"
+import (
+	"fmt"
+	"unicode"
+	"unicode/utf8"
+)
 
 func reverse(s []int) {
 	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
@@ -65,11 +69,10 @@ func removeByte(slice []byte, x int) []byte {
 
 func SquashAdjacentUnicodeSpaces(s []byte) {
 	for pos, char := range s {
-		utf8Code := rune(char)
-		if utf8Code == 32 { // 32 is the int that corresponds to white
+		if unicode.IsSpace(rune(char)) { // 32 is the int that corresponds to whitespace
 			for {
 				frontwards := pos + 1
-				if rune(s[frontwards]) == 32 {
+				if unicode.IsSpace(rune(s[frontwards])) {
 					s = removeByte(s, frontwards)
 				} else {
 					break
@@ -79,4 +82,55 @@ func SquashAdjacentUnicodeSpaces(s []byte) {
 		}
 	}
 	fmt.Println(string(s))
+}
+
+func ReverseByteSlice(in []byte) {
+	// first treat as non utf8-encoded data
+	for i, j := 0, len(in)-1; i < j; i, j = i+1, j-1 {
+		in[i], in[j] = in[j], in[i]
+	}
+
+	// try to decode according to utf8, then fix error
+	i := 0
+	for i < len(in) {
+		var tryTwo, tryThree, tryFour bool
+		for {
+			r, s := utf8.DecodeRune(in[i:])
+			if r != utf8.RuneError {
+				i += s
+				break
+			} else {
+				// try two byte length, swap two bytes
+				if !tryTwo {
+					tryTwo = true
+					in[i], in[i+1] = in[i+1], in[i]
+					continue
+				}
+
+				// try three byte length, swap three bytes
+				if !tryThree {
+					// cancel tryTwo side effect
+					in[i], in[i+1] = in[i+1], in[i]
+					tryThree = true
+					in[i], in[i+2] = in[i+2], in[i]
+					continue
+				}
+
+				// try four byte length, swap four bytes
+				if !tryFour {
+					// cancel tryThree side effect
+					in[i], in[i+1], in[i+2] = in[i+2], in[i+1], in[i]
+
+					tryFour = true
+					in[i], in[i+1], in[i+2], in[i+3] = in[i+3], in[i+2], in[i+1], in[i]
+					continue
+				}
+
+				// should not be here
+				panic("Should not be here!")
+			}
+		}
+	}
+	fmt.Printf("%s", in)
+
 }
