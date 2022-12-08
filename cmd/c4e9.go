@@ -6,9 +6,13 @@ package cmd
 
 import (
 	"fmt"
+	"os"
+	"the-go-programming-language/internal/composite-types/maps"
 
 	"github.com/spf13/cobra"
 )
+
+var c4e9InputFile string
 
 // c4e9Cmd represents the c4e9 command
 var c4e9Cmd = &cobra.Command{
@@ -21,12 +25,18 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c4e9 called")
+		if c4e9InputFile == "" {
+			fmt.Println("Please provide a file path")
+			os.Exit(0)
+		}
+		maps.Wordfreq(c4e9InputFile)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c4e9Cmd)
+	c4e9Cmd.Flags().StringVarP(&c4e9InputFile, "file", "f", "", "Input file for wordfreq")
+
 
 	// Here you will define your flags and configuration settings.
 

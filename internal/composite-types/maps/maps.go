@@ -58,3 +58,8 @@ func CharCount() {
 		fmt.Printf("\n%d digits\n", digit)
 	}
 }
+
+
+func Wordfreq(path string) {
+	fmt.Println(path)
+}
