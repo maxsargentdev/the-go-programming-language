@@ -60,6 +60,23 @@ func CharCount() {
 }
 
 
-func Wordfreq(path string) {
-	fmt.Println(path)
+func Wordfreq(filepath string) {
+	fmt.Println(filepath)
+
+	var freq = make(map[string]int)
+
+	file, err := os.Open(filepath)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "wordfreq: %v\n", err)
+		os.Exit(0)
+	}
+
+	input := bufio.NewScanner(file)
+	input.Split(bufio.ScanWords)
+	for input.Scan() {
+		freq[input.Text()]++
+	}
+	for k, _ := range freq {
+		fmt.Printf("%s - %d\n", k, freq[k])
+	}
 }
