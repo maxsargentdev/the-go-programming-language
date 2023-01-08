@@ -48,6 +48,25 @@ func RunSearch() {
 	printRange(latestItems)
 }
 
+func RunCreate() {
+	pathParams := createIssuePathParams{}
+	bodyParams := createIssueBodyParams{}
+	createIssue(pathParams, bodyParams)
+}
+
+func RunRead() {
+	readIssue()
+}
+
+func RunUpdate() {
+	updateIssue()
+}
+
+func RunLock() {
+	lockIssue()
+}
+
+// Helper functions
 func printRange(items []*Issue) {
 	for _, item := range items {
 		fmt.Printf("#%-5d %9.9s %.55s %v\n",
