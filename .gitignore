@@ -27,3 +27,5 @@ the-go-programming-language
 
 *.png
 *.svg
+
+*.env

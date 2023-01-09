@@ -48,22 +48,36 @@ func RunSearch() {
 	printRange(latestItems)
 }
 
-func RunCreate() {
-	pathParams := issuePathParams{}
-	bodyParams := createIssueBodyParams{}
-	createIssue(pathParams, bodyParams)
+func RunCreate(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
+	err := createIssue(headerParams, pathParams, bodyParams)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error creating issue: %v\n", err)
+		os.Exit(1)
+	}
 }
 
-func RunRead() {
-	readIssue()
+func RunRead(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
+	err := readIssue(headerParams, pathParams, bodyParams)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error reading issue: %v\n", err)
+		os.Exit(1)
+	}
 }
 
-func RunUpdate() {
-	updateIssue()
+func RunUpdate(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
+	err := updateIssue(headerParams, pathParams, bodyParams)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error updating issue: %v\n", err)
+		os.Exit(1)
+	}
 }
 
-func RunLock() {
-	lockIssue()
+func RunLock(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
+	err := lockIssue(headerParams, pathParams, bodyParams)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error locking issue: %v\n", err)
+		os.Exit(1)
+	}
 }
 
 // Helper functions

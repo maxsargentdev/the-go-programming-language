@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
@@ -57,17 +58,21 @@ func searchIssues(terms []string) (*IssuesSearchResult, error) {
 	return &result, nil
 }
 
-type issuePathParams struct {
+type IssueHeaderParams struct {
+	Bearer string
+}
+
+type IssuePathParams struct {
 	Owner       string
 	Repo        string
 	IssueNumber string
 }
 
-type createIssueBodyParams struct {
-	Title    string `json:"title,omitempty"`
-	Body     string `json:"body,omitempty"`
-	Assignee string `json:"assignee,omitempty"`
-	State
+type IssueBodyParams struct {
+	Title       string   `json:"title,omitempty"`
+	Body        string   `json:"body,omitempty"`
+	Assignee    string   `json:"assignee,omitempty"`
+	State       string   `json:"state,omitempty"`
 	StateReason string   `json:"state_reason,omitempty"`
 	Milestone   string   `json:"milestone,omitempty"`
 	Labels      []string `json:"labels,omitempty"`
@@ -79,27 +84,39 @@ type readIssueBodyParams struct {
 }
 
 // createIssue creates a new GitHub issue
-func createIssue(pathParams issuePathParams, bodyParams createIssueBodyParams) error {
+func createIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
 
 	// Interpolate our OWNER and REPO values into the URL path
 	createURL := strings.Replace(CreateIssueURL, "OWNER", pathParams.Owner, 1)
 	createURL = strings.Replace(createURL, "REPO", pathParams.Repo, 1)
 
 	// Marshal body for the wire
-	postBody, err := json.Marshal(bodyParams.Body)
+	postBody, err := json.Marshal(bodyParams)
 	if err != nil {
 		return err
 	}
 	postBodyBytes := bytes.NewReader(postBody)
 
+	// Create client for POST request
+	client := &http.Client{}
+	req, err := http.NewRequest(http.MethodPost, createURL, postBodyBytes)
+	if err != nil {
+		return err
+	}
+
+	// Add bearer
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", headerParams.Bearer))
+	req.Header.Add("Accept", GitHubContentType)
+	req.Header.Add("X-GitHub-Api-Version", "2022-11-28")
+
 	// Fire POST request
-	resp, err := http.Post(createURL, GitHubContentType, postBodyBytes)
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
 
 	// No 200 or fail to close then return the error
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusOK { // need to check for any 200 code
 		err := resp.Body.Close()
 		if err != nil {
 			return err
@@ -107,20 +124,42 @@ func createIssue(pathParams issuePathParams, bodyParams createIssueBodyParams) e
 		return fmt.Errorf("issue creation failed: %s", resp.Status)
 	}
 
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return fmt.Errorf("Error while reading the response bytes:", err)
+	}
+
 	// For debug
-	fmt.Println(resp.Body)
+	fmt.Println(body)
 	return nil
 }
 
 // readIssue reads an existing GitHub issue
-func readIssue(pathParams issuePathParams) error {
+func readIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
 	// Interpolate our OWNER and REPO values into the URL path
 	readURL := strings.Replace(ReadIssueURL, "OWNER", pathParams.Owner, 1)
 	readURL = strings.Replace(readURL, "REPO", pathParams.Repo, 1)
 	readURL = strings.Replace(readURL, "ISSUE_NUMBER", pathParams.Repo, 1)
 
+	// Marshal body for the wire
+	getBody, err := json.Marshal(bodyParams)
+	if err != nil {
+		return err
+	}
+	getBodyBytes := bytes.NewReader(getBody)
+
+	// Create client for GET request
+	client := &http.Client{}
+	req, err := http.NewRequest(http.MethodPut, readURL, getBodyBytes)
+	if err != nil {
+		return err
+	}
+
+	// Add bearer
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", headerParams.Bearer))
+
 	// Fire GET request
-	resp, err := http.Get(readURL)
+	resp, err := client.Do(req)
 	if err != nil {
 		return err
 	}
@@ -140,14 +179,14 @@ func readIssue(pathParams issuePathParams) error {
 }
 
 // updateIssue updates an existing issue
-func updateIssue(pathParams issuePathParams, bodyParams createIssueBodyParams) error {
+func updateIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
 	// Interpolate our OWNER and REPO values into the URL path
 	updateURL := strings.Replace(UpdateIssueURL, "OWNER", pathParams.Owner, 1)
 	updateURL = strings.Replace(updateURL, "REPO", pathParams.Repo, 1)
 	updateURL = strings.Replace(updateURL, "ISSUE_NUMBER", pathParams.IssueNumber, 1)
 
 	// Marshal body for the wire
-	patchBody, err := json.Marshal(bodyParams.Body)
+	patchBody, err := json.Marshal(bodyParams)
 	if err != nil {
 		return err
 	}
@@ -159,6 +198,9 @@ func updateIssue(pathParams issuePathParams, bodyParams createIssueBodyParams) e
 	if err != nil {
 		return err
 	}
+
+	// Add bearer
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", headerParams.Bearer))
 
 	// Fire PATCH request
 	resp, err := client.Do(req)
@@ -181,14 +223,14 @@ func updateIssue(pathParams issuePathParams, bodyParams createIssueBodyParams) e
 }
 
 // lockIssue locks an issue, instead of deleting
-func lockIssue(pathParams issuePathParams, bodyParams createIssueBodyParams) error {
+func lockIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
 	// Interpolate our OWNER and REPO values into the URL path
 	lockURL := strings.Replace(LockIssueURL, "OWNER", pathParams.Owner, 1)
 	lockURL = strings.Replace(lockURL, "REPO", pathParams.Repo, 1)
 	lockURL = strings.Replace(lockURL, "ISSUE_NUMBER", pathParams.IssueNumber, 1)
 
 	// Marshal body for the wire
-	postBody, err := json.Marshal(bodyParams.Body)
+	postBody, err := json.Marshal(bodyParams)
 	if err != nil {
 		return err
 	}
@@ -200,6 +242,9 @@ func lockIssue(pathParams issuePathParams, bodyParams createIssueBodyParams) err
 	if err != nil {
 		return err
 	}
+
+	// Add bearer
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", headerParams.Bearer))
 
 	// Fire PATCH request
 	resp, err := client.Do(req)
