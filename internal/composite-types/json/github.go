@@ -57,22 +57,29 @@ func searchIssues(terms []string) (*IssuesSearchResult, error) {
 	return &result, nil
 }
 
-type createIssuePathParams struct {
-	Owner string
-	Repo  string
+type issuePathParams struct {
+	Owner       string
+	Repo        string
+	IssueNumber string
 }
 
 type createIssueBodyParams struct {
-	Title     string   `json:"title,omitempty"`
-	Body      string   `json:"body,omitempty"`
-	Assignee  string   `json:"assignee,omitempty"`
-	Milestone string   `json:"milestone,omitempty"`
-	Labels    []string `json:"labels,omitempty"`
-	Assignees []string `json:"assignees,omitempty"`
+	Title    string `json:"title,omitempty"`
+	Body     string `json:"body,omitempty"`
+	Assignee string `json:"assignee,omitempty"`
+	State
+	StateReason string   `json:"state_reason,omitempty"`
+	Milestone   string   `json:"milestone,omitempty"`
+	Labels      []string `json:"labels,omitempty"`
+	Assignees   []string `json:"assignees,omitempty"`
+	LockReason  string   `json:"lock_reason,omitempty"`
+}
+
+type readIssueBodyParams struct {
 }
 
 // createIssue creates a new GitHub issue
-func createIssue(pathParams createIssuePathParams, bodyParams createIssueBodyParams) error {
+func createIssue(pathParams issuePathParams, bodyParams createIssueBodyParams) error {
 
 	// Interpolate our OWNER and REPO values into the URL path
 	createURL := strings.Replace(CreateIssueURL, "OWNER", pathParams.Owner, 1)
@@ -97,7 +104,7 @@ func createIssue(pathParams createIssuePathParams, bodyParams createIssueBodyPar
 		if err != nil {
 			return err
 		}
-		return fmt.Errorf("search query failed: %s", resp.Status)
+		return fmt.Errorf("issue creation failed: %s", resp.Status)
 	}
 
 	// For debug
@@ -106,16 +113,110 @@ func createIssue(pathParams createIssuePathParams, bodyParams createIssueBodyPar
 }
 
 // readIssue reads an existing GitHub issue
-func readIssue() {
-	fmt.Println("Issue read")
+func readIssue(pathParams issuePathParams) error {
+	// Interpolate our OWNER and REPO values into the URL path
+	readURL := strings.Replace(ReadIssueURL, "OWNER", pathParams.Owner, 1)
+	readURL = strings.Replace(readURL, "REPO", pathParams.Repo, 1)
+	readURL = strings.Replace(readURL, "ISSUE_NUMBER", pathParams.Repo, 1)
+
+	// Fire GET request
+	resp, err := http.Get(readURL)
+	if err != nil {
+		return err
+	}
+
+	// No 200 or fail to close then return the error
+	if resp.StatusCode != http.StatusOK {
+		err := resp.Body.Close()
+		if err != nil {
+			return err
+		}
+		return fmt.Errorf("issue read failed: %s", resp.Status)
+	}
+
+	// For debug
+	fmt.Println(resp.Body)
+	return nil
 }
 
 // updateIssue updates an existing issue
-func updateIssue() {
-	fmt.Println("Issue updated")
+func updateIssue(pathParams issuePathParams, bodyParams createIssueBodyParams) error {
+	// Interpolate our OWNER and REPO values into the URL path
+	updateURL := strings.Replace(UpdateIssueURL, "OWNER", pathParams.Owner, 1)
+	updateURL = strings.Replace(updateURL, "REPO", pathParams.Repo, 1)
+	updateURL = strings.Replace(updateURL, "ISSUE_NUMBER", pathParams.IssueNumber, 1)
+
+	// Marshal body for the wire
+	patchBody, err := json.Marshal(bodyParams.Body)
+	if err != nil {
+		return err
+	}
+	patchBodyBytes := bytes.NewReader(patchBody)
+
+	// Create client for PATCH request
+	client := &http.Client{}
+	req, err := http.NewRequest(http.MethodPatch, updateURL, patchBodyBytes)
+	if err != nil {
+		return err
+	}
+
+	// Fire PATCH request
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	// No 200 or fail to close then return the error
+	if resp.StatusCode != http.StatusOK {
+		err := resp.Body.Close()
+		if err != nil {
+			return err
+		}
+		return fmt.Errorf("issue update failed: %s", resp.Status)
+	}
+
+	// For debug
+	fmt.Println(resp.Body)
+	return nil
 }
 
 // lockIssue locks an issue, instead of deleting
-func lockIssue() {
-	fmt.Println("Issue locked")
+func lockIssue(pathParams issuePathParams, bodyParams createIssueBodyParams) error {
+	// Interpolate our OWNER and REPO values into the URL path
+	lockURL := strings.Replace(LockIssueURL, "OWNER", pathParams.Owner, 1)
+	lockURL = strings.Replace(lockURL, "REPO", pathParams.Repo, 1)
+	lockURL = strings.Replace(lockURL, "ISSUE_NUMBER", pathParams.IssueNumber, 1)
+
+	// Marshal body for the wire
+	postBody, err := json.Marshal(bodyParams.Body)
+	if err != nil {
+		return err
+	}
+	patchBodyBytes := bytes.NewReader(postBody)
+
+	// Create client for PATCH request
+	client := &http.Client{}
+	req, err := http.NewRequest(http.MethodPut, lockURL, patchBodyBytes)
+	if err != nil {
+		return err
+	}
+
+	// Fire PATCH request
+	resp, err := client.Do(req)
+	if err != nil {
+		return err
+	}
+
+	// No 200 or fail to close then return the error
+	if resp.StatusCode != http.StatusOK {
+		err := resp.Body.Close()
+		if err != nil {
+			return err
+		}
+		return fmt.Errorf("issue update failed: %s", resp.Status)
+	}
+
+	// For debug
+	fmt.Println(resp.Body)
+	return nil
 }

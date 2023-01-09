@@ -49,7 +49,7 @@ func RunSearch() {
 }
 
 func RunCreate() {
-	pathParams := createIssuePathParams{}
+	pathParams := issuePathParams{}
 	bodyParams := createIssueBodyParams{}
 	createIssue(pathParams, bodyParams)
 }
