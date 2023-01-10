@@ -30,9 +30,10 @@ to quickly create a Cobra application.`,
 func init() {
 	C4e11Cmd.AddCommand(readCmd)
 	readCmd.Flags().StringVarP(&c4e11ReadIssueHeaderParams.Bearer, "bearer", "b", "", "Bearer token")
+
 	readCmd.Flags().StringVarP(&c4e11ReadIssuePathParams.Repo, "repo", "r", "", "Repo the issue is in")
 	readCmd.Flags().StringVarP(&c4e11ReadIssuePathParams.Owner, "owner", "o", "", "Owner of the repo")
-	readCmd.Flags().StringVarP(&c4e11LockIssuePathParams.IssueNumber, "issue_number", "i", "", "Issue number of the issue")
+	readCmd.Flags().StringVarP(&c4e11ReadIssuePathParams.IssueNumber, "issue_number", "i", "", "Issue number of the issue")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

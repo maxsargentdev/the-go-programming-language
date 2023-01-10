@@ -31,9 +31,10 @@ to quickly create a Cobra application.`,
 func init() {
 	C4e11Cmd.AddCommand(updateCmd)
 	updateCmd.Flags().StringVarP(&c4e11UpdateIssueHeaderParams.Bearer, "bearer", "b", "", "Bearer token")
+
 	updateCmd.Flags().StringVarP(&c4e11UpdateIssuePathParams.Repo, "repo", "r", "", "Repo to update the issue from")
 	updateCmd.Flags().StringVarP(&c4e11UpdateIssuePathParams.Owner, "owner", "o", "", "Owner of the repo")
-	updateCmd.Flags().StringVarP(&c4e11LockIssuePathParams.IssueNumber, "issue_number", "i", "", "Issue number of the issue")
+	updateCmd.Flags().StringVarP(&c4e11UpdateIssuePathParams.IssueNumber, "issue_number", "i", "", "Issue number of the issue")
 
 	// Here you will define your flags and configuration settings.
 

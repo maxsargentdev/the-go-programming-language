@@ -17,6 +17,7 @@ const ReadIssueURL = "https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBE
 const UpdateIssueURL = "https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER"
 const LockIssueURL = "https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/lock"
 const GitHubContentType = "application/vnd.github+json"
+const GitHubApiVersion = "2022-11-28"
 
 type IssuesSearchResult struct {
 	TotalCount int `json:"total_count"`
@@ -107,7 +108,7 @@ func createIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bod
 	// Add bearer
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", headerParams.Bearer))
 	req.Header.Add("Accept", GitHubContentType)
-	req.Header.Add("X-GitHub-Api-Version", "2022-11-28")
+	req.Header.Add("X-GitHub-Api-Version", GitHubApiVersion)
 
 	// Fire POST request
 	resp, err := client.Do(req)
@@ -116,7 +117,7 @@ func createIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bod
 	}
 
 	// No 200 or fail to close then return the error
-	if resp.StatusCode != http.StatusOK { // need to check for any 200 code
+	if resp.StatusCode != http.StatusOK { // need to check for any 200 code, not just Status OK
 		err := resp.Body.Close()
 		if err != nil {
 			return err
@@ -139,7 +140,7 @@ func readIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyP
 	// Interpolate our OWNER and REPO values into the URL path
 	readURL := strings.Replace(ReadIssueURL, "OWNER", pathParams.Owner, 1)
 	readURL = strings.Replace(readURL, "REPO", pathParams.Repo, 1)
-	readURL = strings.Replace(readURL, "ISSUE_NUMBER", pathParams.Repo, 1)
+	readURL = strings.Replace(readURL, "ISSUE_NUMBER", pathParams.IssueNumber, 1)
 
 	// Marshal body for the wire
 	getBody, err := json.Marshal(bodyParams)
@@ -150,13 +151,15 @@ func readIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyP
 
 	// Create client for GET request
 	client := &http.Client{}
-	req, err := http.NewRequest(http.MethodPut, readURL, getBodyBytes)
+	req, err := http.NewRequest(http.MethodGet, readURL, getBodyBytes)
 	if err != nil {
 		return err
 	}
 
 	// Add bearer
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", headerParams.Bearer))
+	req.Header.Add("Accept", GitHubContentType)
+	req.Header.Add("X-GitHub-Api-Version", GitHubApiVersion)
 
 	// Fire GET request
 	resp, err := client.Do(req)
@@ -174,7 +177,13 @@ func readIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyP
 	}
 
 	// For debug
-	fmt.Println(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf(string(respBody))
+	defer resp.Body.Close()
 	return nil
 }
 
@@ -201,6 +210,8 @@ func updateIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bod
 
 	// Add bearer
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", headerParams.Bearer))
+	req.Header.Add("Accept", GitHubContentType)
+	req.Header.Add("X-GitHub-Api-Version", GitHubApiVersion)
 
 	// Fire PATCH request
 	resp, err := client.Do(req)
@@ -245,6 +256,8 @@ func lockIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyP
 
 	// Add bearer
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", headerParams.Bearer))
+	req.Header.Add("Accept", GitHubContentType)
+	req.Header.Add("X-GitHub-Api-Version", GitHubApiVersion)
 
 	// Fire PATCH request
 	resp, err := client.Do(req)
