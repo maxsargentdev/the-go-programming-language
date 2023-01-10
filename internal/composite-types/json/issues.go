@@ -65,7 +65,8 @@ func RunRead(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyPar
 }
 
 func RunUpdate(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
-	err := updateIssue(headerParams, pathParams, bodyParams)
+	editedBodyParams := editBodyParams(bodyParams)
+	err := updateIssue(headerParams, pathParams, editedBodyParams)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error updating issue: %v\n", err)
 		os.Exit(1)
