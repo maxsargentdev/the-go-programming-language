@@ -127,7 +127,7 @@ func createIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bod
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return fmt.Errorf("Error while reading the response bytes:", err)
+		return fmt.Errorf("error while reading the response bytes:", err)
 	}
 
 	// For debug
@@ -182,6 +182,7 @@ func readIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyP
 		return err
 	}
 
+	// No need to deserialize the response, just display a string
 	fmt.Printf(string(respBody))
 	defer resp.Body.Close()
 	return nil
