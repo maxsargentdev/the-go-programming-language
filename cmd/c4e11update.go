@@ -36,6 +36,7 @@ func init() {
 	updateCmd.Flags().StringVarP(&c4e11UpdateIssuePathParams.Owner, "owner", "o", "", "Owner of the repo")
 	updateCmd.Flags().StringVarP(&c4e11UpdateIssuePathParams.IssueNumber, "issue_number", "i", "", "Issue number of the issue")
 
+	updateCmd.Flags().StringVarP(&c4e11UpdateIssueBodyParams.Title, "title", "t", "", "Title of the issue")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

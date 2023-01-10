@@ -117,7 +117,7 @@ func createIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bod
 	}
 
 	// No 200 or fail to close then return the error
-	if resp.StatusCode != http.StatusOK { // need to check for any 200 code, not just Status OK
+	if resp.StatusCode != http.StatusCreated {
 		err := resp.Body.Close()
 		if err != nil {
 			return err
@@ -230,7 +230,14 @@ func updateIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bod
 	}
 
 	// For debug
-	fmt.Println(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	// No need to deserialize the response, just display a string
+	fmt.Printf(string(respBody))
+	defer resp.Body.Close()
 	return nil
 }
 
@@ -267,7 +274,7 @@ func lockIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyP
 	}
 
 	// No 200 or fail to close then return the error
-	if resp.StatusCode != http.StatusOK {
+	if resp.StatusCode != http.StatusNoContent {
 		err := resp.Body.Close()
 		if err != nil {
 			return err
@@ -276,6 +283,13 @@ func lockIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyP
 	}
 
 	// For debug
-	fmt.Println(resp.Body)
+	respBody, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	// No need to deserialize the response, just display a string
+	fmt.Printf(string(respBody))
+	defer resp.Body.Close()
 	return nil
 }
