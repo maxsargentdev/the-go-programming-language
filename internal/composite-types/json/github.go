@@ -37,8 +37,8 @@ type User struct {
 	HTMLURL string `json:"html_url"`
 }
 
-// saerchIssuess queries the GitHub issue tracker.
-func searchIssues(terms []string) (*IssuesSearchResult, error) {
+// searchGitHubIssues queries the GitHub issue tracker.
+func searchGitHubIssues(terms []string) (*IssuesSearchResult, error) {
 	q := url.QueryEscape(strings.Join(terms, " "))
 	resp, err := http.Get(SearchIssuesURL + "?q=" + q)
 	if err != nil {
@@ -84,8 +84,8 @@ type IssueBodyParams struct {
 type readIssueBodyParams struct {
 }
 
-// createIssue creates a new GitHub issue
-func createIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
+// createGitHubIssue creates a new GitHub issue
+func createGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
 
 	// Interpolate our OWNER and REPO values into the URL path
 	createURL := strings.Replace(CreateIssueURL, "OWNER", pathParams.Owner, 1)
@@ -135,8 +135,8 @@ func createIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bod
 	return nil
 }
 
-// readIssue reads an existing GitHub issue
-func readIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
+// readGitHubIssue reads an existing GitHub issue
+func readGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
 	// Interpolate our OWNER and REPO values into the URL path
 	readURL := strings.Replace(ReadIssueURL, "OWNER", pathParams.Owner, 1)
 	readURL = strings.Replace(readURL, "REPO", pathParams.Repo, 1)
@@ -188,8 +188,8 @@ func readIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyP
 	return nil
 }
 
-// updateIssue updates an existing issue
-func updateIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
+// updateGitHubIssue updates an existing issue
+func updateGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
 	// Interpolate our OWNER and REPO values into the URL path
 	updateURL := strings.Replace(UpdateIssueURL, "OWNER", pathParams.Owner, 1)
 	updateURL = strings.Replace(updateURL, "REPO", pathParams.Repo, 1)
@@ -241,8 +241,8 @@ func updateIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bod
 	return nil
 }
 
-// lockIssue locks an issue, instead of deleting
-func lockIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
+// lockGitHubIssue locks an issue, instead of deleting
+func lockGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
 	// Interpolate our OWNER and REPO values into the URL path
 	lockURL := strings.Replace(LockIssueURL, "OWNER", pathParams.Owner, 1)
 	lockURL = strings.Replace(lockURL, "REPO", pathParams.Repo, 1)

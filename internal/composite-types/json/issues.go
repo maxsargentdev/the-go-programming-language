@@ -8,7 +8,7 @@ import (
 )
 
 func RunSearch() {
-	result, err := searchIssues(os.Args[2:])
+	result, err := searchGitHubIssues(os.Args[2:])
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -48,34 +48,34 @@ func RunSearch() {
 	printRange(latestItems)
 }
 
-func RunCreate(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
+func RunGitHubCreate(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
 	editedBodyParams := editBodyParams(bodyParams)
-	err := createIssue(headerParams, pathParams, editedBodyParams)
+	err := createGitHubIssue(headerParams, pathParams, editedBodyParams)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error creating issue: %v\n", err)
 		os.Exit(1)
 	}
 }
 
-func RunRead(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
-	err := readIssue(headerParams, pathParams, bodyParams)
+func RunGitHubRead(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
+	err := readGitHubIssue(headerParams, pathParams, bodyParams)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error reading issue: %v\n", err)
 		os.Exit(1)
 	}
 }
 
-func RunUpdate(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
+func RunGitHubUpdate(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
 	editedBodyParams := editBodyParams(bodyParams)
-	err := updateIssue(headerParams, pathParams, editedBodyParams)
+	err := updateGitHubIssue(headerParams, pathParams, editedBodyParams)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error updating issue: %v\n", err)
 		os.Exit(1)
 	}
 }
 
-func RunLock(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
-	err := lockIssue(headerParams, pathParams, bodyParams)
+func RunGitHubLock(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
+	err := lockGitHubIssue(headerParams, pathParams, bodyParams)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error locking issue: %v\n", err)
 		os.Exit(1)
