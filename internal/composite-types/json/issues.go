@@ -49,7 +49,8 @@ func RunSearch() {
 }
 
 func RunCreate(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) {
-	err := createIssue(headerParams, pathParams, bodyParams)
+	editedBodyParams := editBodyParams(bodyParams)
+	err := createIssue(headerParams, pathParams, editedBodyParams)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error creating issue: %v\n", err)
 		os.Exit(1)

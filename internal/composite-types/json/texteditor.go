@@ -8,57 +8,66 @@ import (
 	"os/exec"
 )
 
-// SWITCH TO USING JSON.MARSHAL FOR THIS
-// STILL WIP
+const tempFileLocation = "/tmp/test.txt"
 
-// updateBodyParams recieves a bodyParams object, creates a temp file, opens a text editor on that file that renders that object in a nice format
+// updateBodyParams recieves a bodyParams object and lets users edit the json in vim
 func editBodyParams(bodyParams IssueBodyParams) IssueBodyParams {
 
-	tempFile := createFile("/tmp/test.txt")
+	// Create the temp file filled with JSON
+	tempFile := createFile(tempFileLocation)
 	writeFile(tempFile, bodyParams)
 
-	cmd := exec.Command("vim", "/tmp/test.txt")
+	// Open vim and give a view onto the json object
+	cmd := exec.Command("vim", tempFileLocation)
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	err := cmd.Run()
-
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error updating issue: %v\n", err)
+		fmt.Fprintf(os.Stderr, "error launching vim: %v\n", err)
 		os.Exit(1)
 	}
-	testString := readFile(tempFile)
-	fmt.Println(testString)
 
-	// Now let's unmarshall the data into `payload`
-	var payload IssueBodyParams
-	err = json.Unmarshal(testString, &payload)
+	// Read the file back, its going to be our new boyParams
+	tempBytes := readFile()
+
+	// Now let's unmarshall the data into back into our struct
+	var editedBodyParams IssueBodyParams
+	err = json.Unmarshal(tempBytes, &editedBodyParams)
 	if err != nil {
 		log.Fatal("Error during Unmarshal(): ", err)
 	}
 
+	// Close handle on temp file so we can delete safely
 	closeFile(tempFile)
-	deleteFile(tempFile)
 
-	return payload
+	// Delete file
+	deleteFile()
+
+	return editedBodyParams
 }
 
 func createFile(p string) *os.File {
-	fmt.Println("creating")
 	f, err := os.Create(p)
+
 	if err != nil {
-		panic(err)
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
 	}
+
 	return f
 }
 
 func writeFile(f *os.File, params IssueBodyParams) {
-	fmt.Println("writing")
-	fmt.Fprintln(f, fmt.Sprintf("%#v", params))
+	marshalledParams, err := json.Marshal(params)
 
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Fprintln(f, string(marshalledParams))
 }
 
 func closeFile(f *os.File) {
-	fmt.Println("closing")
 	err := f.Close()
 
 	if err != nil {
@@ -67,21 +76,22 @@ func closeFile(f *os.File) {
 	}
 }
 
-func deleteFile(f *os.File) {
-	os.Remove("/tmp/test.txt")
+func deleteFile() {
+	err := os.Remove(tempFileLocation)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
 }
 
-func readFile(f *os.File) []byte {
-	data, _ := os.ReadFile("/tmp/test.txt")
+func readFile() []byte {
+	data, err := os.ReadFile(tempFileLocation)
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+	
 	return data
 }
-
-//This part of the code will do a few things:
-//
-//	- create temp files with a setup of input prefilled, like git CLI does
-//	- open a text editor & temp file, prompting user for input
-//	- save file to disk and load to memory for validation
-//	- if valid, use as input for some REST request
-//	- if invalid, save file back to disk and reload, give hints in comments for user
-//
-//The file format should NOT be json, it should be something commentable and more user friendly.
