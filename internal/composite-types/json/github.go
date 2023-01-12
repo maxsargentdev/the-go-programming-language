@@ -12,10 +12,10 @@ import (
 )
 
 const SearchIssuesURL = "https://api.github.com/search/issues"
-const CreateIssueURL = "https://api.github.com/repos/OWNER/REPO/issues"
-const ReadIssueURL = "https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER"
-const UpdateIssueURL = "https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER"
-const LockIssueURL = "https://api.github.com/repos/OWNER/REPO/issues/ISSUE_NUMBER/lock"
+const CreateIssueURL = "https://api.github.com/repos/%s/%s/issues"
+const ReadIssueURL = "https://api.github.com/repos/%s/%s/issues/%s"
+const UpdateIssueURL = "https://api.github.com/repos/%s/%s/issues/%s"
+const LockIssueURL = "https://api.github.com/repos/%s/%s/issues/%s/lock"
 const GitHubContentType = "application/vnd.github+json"
 const GitHubApiVersion = "2022-11-28"
 
@@ -86,10 +86,8 @@ type readIssueBodyParams struct {
 
 // createGitHubIssue creates a new GitHub issue
 func createGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
-
 	// Interpolate our OWNER and REPO values into the URL path
-	createURL := strings.Replace(CreateIssueURL, "OWNER", pathParams.Owner, 1)
-	createURL = strings.Replace(createURL, "REPO", pathParams.Repo, 1)
+	createURL := fmt.Sprintf(CreateIssueURL, pathParams.Owner, pathParams.Repo)
 
 	// Marshal body for the wire
 	postBody, err := json.Marshal(bodyParams)
@@ -138,9 +136,7 @@ func createGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParam
 // readGitHubIssue reads an existing GitHub issue
 func readGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
 	// Interpolate our OWNER and REPO values into the URL path
-	readURL := strings.Replace(ReadIssueURL, "OWNER", pathParams.Owner, 1)
-	readURL = strings.Replace(readURL, "REPO", pathParams.Repo, 1)
-	readURL = strings.Replace(readURL, "ISSUE_NUMBER", pathParams.IssueNumber, 1)
+	readURL := fmt.Sprintf(ReadIssueURL, pathParams.Owner, pathParams.Repo, pathParams.IssueNumber)
 
 	// Marshal body for the wire
 	getBody, err := json.Marshal(bodyParams)
@@ -191,9 +187,7 @@ func readGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParams,
 // updateGitHubIssue updates an existing issue
 func updateGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
 	// Interpolate our OWNER and REPO values into the URL path
-	updateURL := strings.Replace(UpdateIssueURL, "OWNER", pathParams.Owner, 1)
-	updateURL = strings.Replace(updateURL, "REPO", pathParams.Repo, 1)
-	updateURL = strings.Replace(updateURL, "ISSUE_NUMBER", pathParams.IssueNumber, 1)
+	updateURL := fmt.Sprintf(UpdateIssueURL, pathParams.Owner, pathParams.Repo, pathParams.IssueNumber)
 
 	// Marshal body for the wire
 	patchBody, err := json.Marshal(bodyParams)
@@ -244,9 +238,7 @@ func updateGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParam
 // lockGitHubIssue locks an issue, instead of deleting
 func lockGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParams, bodyParams IssueBodyParams) error {
 	// Interpolate our OWNER and REPO values into the URL path
-	lockURL := strings.Replace(LockIssueURL, "OWNER", pathParams.Owner, 1)
-	lockURL = strings.Replace(lockURL, "REPO", pathParams.Repo, 1)
-	lockURL = strings.Replace(lockURL, "ISSUE_NUMBER", pathParams.IssueNumber, 1)
+	lockURL := fmt.Sprintf(LockIssueURL, pathParams.Owner, pathParams.Repo, pathParams.IssueNumber)
 
 	// Marshal body for the wire
 	postBody, err := json.Marshal(bodyParams)
