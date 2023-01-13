@@ -1,7 +1,10 @@
 package json
 
 import (
+	"encoding/json"
 	"fmt"
+	"os"
+	"sort"
 	"strings"
 	"sync"
 )
@@ -9,6 +12,7 @@ import (
 var xkcdJsonUrl = "https://xkcd.com/%d/info.0.json"
 var xkcdStartIndex = 1
 var xkcdFinalIndex = 2723
+var indexFileLocation = "/tmp/xkcd-index.json"
 
 type Comic struct {
 	Month      string `json:"month"`
@@ -26,15 +30,24 @@ type Comic struct {
 
 type TitleWordList []string
 
+type IndexedComic struct {
+	Comic      Comic
+	TitleIndex TitleWordList
+}
+
+var xkcdIndex = make(map[int]IndexedComic)
+
 // use goroutines to download all files quickly and in parallel
 // then we need to use some kind of index.map to improve the search
 // how about, comic number -> string[] of each word in the
 func RunXKCDIndexGen() {
 
-	var xkcdIndex = make(map[int]TitleWordList)
-
 	var mu sync.Mutex
 	var wg sync.WaitGroup
+
+	// Add step here to check existence of index file, unmarshal and load into index first
+	// Then adjust start index for worker group so we just cache new stuff....
+	// We will also need a REST request to fetch the latest ID from xkcd.com
 
 	for i := xkcdStartIndex; i <= xkcdFinalIndex; i++ {
 
@@ -46,23 +59,23 @@ func RunXKCDIndexGen() {
 			mu.Lock()
 			defer wg.Done()
 			defer mu.Unlock()
-			xkcdIndex[i] = strings.Split(getXKCDWorker(i).Title, " ")
+			comic := getXKCDWorker(i)
+			titleList := splitTitle(comic.Title)
+			sort.Strings(titleList)
+			xkcdIndex[i] = IndexedComic{Comic: comic, TitleIndex: titleList}
 		}()
 
 	}
 
 	wg.Wait()
-	fmt.Println(xkcdIndex[1][3])
 }
 
-func splitTitle(string title) string {
+func splitTitle(title string) []string {
 	return strings.Split(title, " ")
 }
 
 func getXKCDWorker(comicNumber int) Comic {
-	xkcdURL := fmt.Sprintf(xkcdJsonUrl, comicNumber)
-	fmt.Println(xkcdURL)
-
+	//xkcdURL := fmt.Sprintf(xkcdJsonUrl, comicNumber)
 	//_, err := http.Get(xkcdURL)
 	//if err != nil {
 	//	log.Fatalln(err)
@@ -75,7 +88,14 @@ func RunXKCDIndexSearch() {
 	fmt.Println("Searching XKCD index")
 }
 
-// Bonus - generate the index and save to disk as a cache, then when generating update cache
+// Bonus - generate the index and save to disk as a cache, for working offline on the train
 func RunXKCDMaterialize() {
-	fmt.Println("Materializing XKCD index to disk")
+	serializedXkcdIndex, _ := json.Marshal(xkcdIndex)
+	xkcdIndexFile := createFile(indexFileLocation)
+	_, err := fmt.Fprintln(xkcdIndexFile, string(serializedXkcdIndex))
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error updating issue: %v\n", err)
+		os.Exit(1)
+	}
+	closeFile(xkcdIndexFile)
 }
