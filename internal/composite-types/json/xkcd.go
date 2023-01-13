@@ -91,11 +91,13 @@ func RunXKCDIndexSearch() {
 // Bonus - generate the index and save to disk as a cache, for working offline on the train
 func RunXKCDMaterialize() {
 	serializedXkcdIndex, _ := json.Marshal(xkcdIndex)
+
 	xkcdIndexFile := createFile(indexFileLocation)
+	defer closeFile(xkcdIndexFile)
+
 	_, err := fmt.Fprintln(xkcdIndexFile, string(serializedXkcdIndex))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error updating issue: %v\n", err)
 		os.Exit(1)
 	}
-	closeFile(xkcdIndexFile)
 }
