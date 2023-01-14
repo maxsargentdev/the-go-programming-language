@@ -3,6 +3,9 @@ package json
 import (
 	"encoding/json"
 	"fmt"
+	"io"
+	"log"
+	"net/http"
 	"os"
 	"sort"
 	"strings"
@@ -63,6 +66,7 @@ func RunXKCDIndexGen() {
 			titleList := splitTitle(comic.Title)
 			sort.Strings(titleList)
 			xkcdIndex[i] = IndexedComic{Comic: comic, TitleIndex: titleList}
+			fmt.Printf("downloaded - %s\n", comic.Title)
 		}()
 
 	}
@@ -75,13 +79,20 @@ func splitTitle(title string) []string {
 }
 
 func getXKCDWorker(comicNumber int) Comic {
-	//xkcdURL := fmt.Sprintf(xkcdJsonUrl, comicNumber)
-	//_, err := http.Get(xkcdURL)
-	//if err != nil {
-	//	log.Fatalln(err)
-	//} Update to return JSON later and unmarshal, for now just return a string and focus on building the index
+	xkcdURL := fmt.Sprintf(xkcdJsonUrl, comicNumber)
 
-	return Comic{Title: "Test Title Has Has A Few Words"}
+	resp, err := http.Get(xkcdURL)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	comic := Comic{}
+
+	body, _ := io.ReadAll(resp.Body)
+
+	json.Unmarshal(body, &comic)
+
+	return comic
 }
 
 func RunXKCDIndexSearch() {
