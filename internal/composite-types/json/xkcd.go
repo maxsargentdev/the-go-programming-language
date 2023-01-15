@@ -12,10 +12,10 @@ import (
 	"sync"
 )
 
-var xkcdJsonUrl = "https://xkcd.com/%d/info.0.json"
-var xkcdStartIndex = 1
-var xkcdFinalIndex = 2723
+var XKCDComicJsonURL = "https://xkcd.com/%d/info.0.json"
+var latestXKCDComicJsonURL = "https://xkcd.com/info.0.json"
 var indexFileLocation = "/tmp/xkcd-index.json"
+var xkcdIndex = make([]IndexedComic, 0)
 
 type Comic struct {
 	Month      string `json:"month"`
@@ -38,21 +38,38 @@ type IndexedComic struct {
 	TitleIndex TitleWordList
 }
 
-var xkcdIndex = make(map[int]IndexedComic)
-
-// use goroutines to download all files quickly and in parallel
-// then we need to use some kind of index.map to improve the search
-// how about, comic number -> string[] of each word in the
 func RunXKCDIndexGen() {
+	resp, err := http.Get(latestXKCDComicJsonURL)
+	if err != nil {
+		log.Fatal("error getting latest comic: ", err)
+	}
+	comic := Comic{}
+	body, _ := io.ReadAll(resp.Body)
+
+	err = json.Unmarshal(body, &comic)
+	if err != nil {
+		log.Fatal("error during unmarshal of latest comic: ", err)
+	}
+
+	XKCDStartIndex := 1
+	XKCDFinalIndex := comic.Num
+
+	data, err := os.ReadFile(indexFileLocation)
+	if os.IsNotExist(err) {
+		log.Println("no existing index file detected")
+	} else if err != nil {
+		log.Fatal("fatal error during file read: ", err)
+	} else {
+		err = json.Unmarshal(data, &xkcdIndex)
+		if err != nil {
+			log.Fatal("error during unmarshal of existing index file: ", err)
+		}
+		XKCDStartIndex = xkcdIndex[len(xkcdIndex)-1].Comic.Num + 1
+	}
 
 	var mu sync.Mutex
 	var wg sync.WaitGroup
-
-	// Add step here to check existence of index file, unmarshal and load into index first
-	// Then adjust start index for worker group so we just cache new stuff....
-	// We will also need a REST request to fetch the latest ID from xkcd.com
-
-	for i := xkcdStartIndex; i <= xkcdFinalIndex; i++ {
+	for i := XKCDStartIndex; i <= XKCDFinalIndex; i++ {
 
 		wg.Add(1)
 
@@ -60,28 +77,39 @@ func RunXKCDIndexGen() {
 
 		go func() {
 			mu.Lock()
+
 			defer wg.Done()
 			defer mu.Unlock()
+
 			comic := getXKCDWorker(i)
+
 			titleList := splitTitle(comic.Title)
 			sort.Strings(titleList)
-			xkcdIndex[i] = IndexedComic{Comic: comic, TitleIndex: titleList}
-			fmt.Printf("downloaded - %s\n", comic.Title)
+
+			xkcdIndex = append(xkcdIndex, IndexedComic{Comic: comic, TitleIndex: titleList})
+
+			fmt.Printf("downloaded: %s (%d) \n", comic.Title, i)
 		}()
 
 	}
 
 	wg.Wait()
+
+	// Sort the slice so when we materialize it is easy to search and to determine our current position
+	sort.Slice(xkcdIndex, func(i, j int) bool {
+		return xkcdIndex[i].Comic.Num < xkcdIndex[j].Comic.Num
+	})
 }
 
 func splitTitle(title string) []string {
 	return strings.Split(title, " ")
 }
 
+// getXKCDWorker is a function designed to be called as a go routine, it fetches and unmarshalls comics.
 func getXKCDWorker(comicNumber int) Comic {
-	xkcdURL := fmt.Sprintf(xkcdJsonUrl, comicNumber)
+	XKCDURL := fmt.Sprintf(XKCDComicJsonURL, comicNumber)
 
-	resp, err := http.Get(xkcdURL)
+	resp, err := http.Get(XKCDURL)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -90,25 +118,27 @@ func getXKCDWorker(comicNumber int) Comic {
 
 	body, _ := io.ReadAll(resp.Body)
 
-	json.Unmarshal(body, &comic)
-
+	err = json.Unmarshal(body, &comic)
+	if err != nil {
+		log.Println("error thrown in a worker process")
+	}
 	return comic
 }
 
+// RunXKCDIndexSearch generates, materializes and searches the the XKCD web-comic archives.
 func RunXKCDIndexSearch() {
 	fmt.Println("Searching XKCD index")
 }
 
-// Bonus - generate the index and save to disk as a cache, for working offline on the train
+// RunXKCDMaterialize takes the current global index state and writes it to list
 func RunXKCDMaterialize() {
 	serializedXkcdIndex, _ := json.Marshal(xkcdIndex)
-
 	xkcdIndexFile := createFile(indexFileLocation)
 	defer closeFile(xkcdIndexFile)
-
 	_, err := fmt.Fprintln(xkcdIndexFile, string(serializedXkcdIndex))
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error updating issue: %v\n", err)
+		fmt.Fprintf(os.Stderr, "error materializing index: %v\n", err)
 		os.Exit(1)
 	}
+
 }
