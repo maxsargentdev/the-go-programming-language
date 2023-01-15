@@ -9,6 +9,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var c4e12SearchTerms []string
+
 // searchCmd represents the search command
 var searchCmd = &cobra.Command{
 	Use:   "search",
@@ -20,13 +22,15 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		json.RunXKCDIndexSearch()
+		json.RunXKCDIndexGen()
+		json.RunXKCDMaterialize()
+		json.RunXKCDIndexSearch(c4e12SearchTerms)
 	},
 }
 
 func init() {
 	c4e12Cmd.AddCommand(searchCmd)
-
+	searchCmd.Flags().StringSliceVarP(&c4e12SearchTerms, "terms", "t", []string{"Barrel", "Spider"}, "An comma separated string of search terms")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

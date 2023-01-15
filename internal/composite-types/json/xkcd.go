@@ -3,6 +3,7 @@ package json
 import (
 	"encoding/json"
 	"fmt"
+	"golang.org/x/exp/slices"
 	"io"
 	"log"
 	"net/http"
@@ -55,6 +56,7 @@ func RunXKCDIndexGen() {
 	XKCDFinalIndex := comic.Num
 
 	data, err := os.ReadFile(indexFileLocation)
+
 	if os.IsNotExist(err) {
 		log.Println("no existing index file detected")
 	} else if err != nil {
@@ -65,6 +67,11 @@ func RunXKCDIndexGen() {
 			log.Fatal("error during unmarshal of existing index file: ", err)
 		}
 		XKCDStartIndex = xkcdIndex[len(xkcdIndex)-1].Comic.Num + 1
+	}
+
+	if XKCDFinalIndex == XKCDStartIndex-1 {
+		log.Println("you are upto date with the latest comics")
+		return
 	}
 
 	var mu sync.Mutex
@@ -126,11 +133,25 @@ func getXKCDWorker(comicNumber int) Comic {
 }
 
 // RunXKCDIndexSearch generates, materializes and searches the the XKCD web-comic archives.
-func RunXKCDIndexSearch() {
+func RunXKCDIndexSearch(searchTerms []string) {
 	fmt.Println("Searching XKCD index")
+
+	for _, t := range searchTerms {
+		for _, c := range xkcdIndex {
+			if slices.Contains(c.TitleIndex, t) {
+				fmt.Println("--------------------------------------------------------")
+				fmt.Printf("%s\n", strings.ToUpper(c.Comic.Title))
+				fmt.Printf("%s\n", c.Comic.Img)
+				fmt.Println("--------------------------------------------------------")
+				fmt.Printf("%s\n", c.Comic.Transcript)
+				fmt.Println("--------------------------------------------------------")
+			}
+		}
+	}
+
 }
 
-// RunXKCDMaterialize takes the current global index state and writes it to list
+// RunXKCDMaterialize takes the current global index state and writes it to disk.
 func RunXKCDMaterialize() {
 	serializedXkcdIndex, _ := json.Marshal(xkcdIndex)
 	xkcdIndexFile := createFile(indexFileLocation)
