@@ -1,14 +1,15 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
+	"the-go-programming-language/internal/composite-types/json"
 
 	"github.com/spf13/cobra"
 )
+
+var c4e13SearchTerm string
 
 // c4e13Cmd represents the c4e13 command
 var c4e13Cmd = &cobra.Command{
@@ -21,13 +22,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c4e13 called")
+		json.RunOMDBFetch(c4e13SearchTerm)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c4e13Cmd)
-
+	c4e13Cmd.Flags().StringVarP(&c4e13SearchTerm, "searchTerm", "s", "Star Wars: Episode IV - A New Hope", "Search term for OMDB")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
