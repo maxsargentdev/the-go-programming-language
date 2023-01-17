@@ -9,35 +9,15 @@ import (
 )
 
 func Serve(project string, repo string) {
-	getBugReports(project, repo)
-	getMilestones(project, repo)
-	getUsers(project, repo)
 
 	fmt.Println("Server Starting")
-	http.HandleFunc("/home", homeHandler)
-	http.HandleFunc("/index", HttpFileHandler)
 
-	//http.HandleFunc("/", indexTemplateHandler)
+	http.HandleFunc("/home", homeHandler)
+	http.HandleFunc("/bugreports", bugReportHandler)
+	http.HandleFunc("/milestones", milestonesHandler)
+	http.HandleFunc("/users", usersHandler)
 
 	http.ListenAndServe(":8080", nil)
-
-	renderHome()
-}
-
-func renderHome() {
-	fmt.Println("Rendering home HTML.........")
-}
-
-func renderBugReports() {
-	fmt.Println("Rendering HTML templates.......")
-}
-
-func renderMilestones() {
-	fmt.Println("Rendering HTML templates.......")
-}
-
-func renderUsers() {
-	fmt.Println("Rendering HTML templates.......")
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -50,7 +30,49 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 	</ul>
 `
 
-	report, err := template.New("report").
+	report, err := template.New("home").
+		Funcs(template.FuncMap{"daysAgo": daysAgo}).
+		Parse(templ)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	report.Execute(w, IssueBodyParams{})
+}
+
+func bugReportHandler(w http.ResponseWriter, r *http.Request) {
+	const templ = `
+	<h1>Bugreports</h1>`
+
+	report, err := template.New("bugreports").
+		Funcs(template.FuncMap{"daysAgo": daysAgo}).
+		Parse(templ)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	report.Execute(w, IssueBodyParams{})
+}
+
+func milestonesHandler(w http.ResponseWriter, r *http.Request) {
+	const templ = `
+	<h1>Milestones</h1>`
+
+	report, err := template.New("milestones").
+		Funcs(template.FuncMap{"daysAgo": daysAgo}).
+		Parse(templ)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	report.Execute(w, IssueBodyParams{})
+}
+
+func usersHandler(w http.ResponseWriter, r *http.Request) {
+	const templ = `
+	<h1>Users</h1>`
+
+	report, err := template.New("users").
 		Funcs(template.FuncMap{"daysAgo": daysAgo}).
 		Parse(templ)
 	if err != nil {
@@ -62,9 +84,4 @@ func homeHandler(w http.ResponseWriter, r *http.Request) {
 
 func daysAgo(t time.Time) int {
 	return int(time.Since(t).Hours() / 2)
-}
-
-func HttpFileHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello %s!", r.URL.Path[1:])
-	//http.ServeFile(response, request, "Index.html")
 }
