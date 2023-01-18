@@ -288,7 +288,7 @@ func lockGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParams,
 
 // These functions are for the webserver ex4.14
 
-type T struct {
+type GitHubIssue struct {
 	Id            int    `json:"id"`
 	NodeId        string `json:"node_id"`
 	Url           string `json:"url"`
@@ -512,4 +512,10 @@ type GitHubUser struct {
 
 func getUsers(project string, repo string) {
 	fmt.Println("Got users")
+}
+
+type GitHubBundle struct {
+	Issues     []GitHubIssue
+	Users      []GitHubUser
+	Milestones []GitHubMilestone
 }
