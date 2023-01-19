@@ -11,11 +11,15 @@ import (
 
 func QueryGitHubAPI() GitHubBundle {
 	return GitHubBundle{
-		Issues: []GitHubIssue{},
+		Issues: []GitHubIssue{
+			{Id: 0, Title: "test_issue", Url: "github.com/test_project/test_repo/issues/0"},
+		},
 		Users: []GitHubUser{
 			{Id: 0, Login: "test_user", HtmlUrl: "test_user.github.io"},
 		},
-		Milestones: []GitHubMilestone{},
+		Milestones: []GitHubMilestone{
+			{Id: 0, Title: "test_milestone", Url: "github.com/test_project/test_repo/milestones/0"},
+		},
 	}
 }
 
@@ -67,10 +71,16 @@ func bugReportHandler(w http.ResponseWriter, r *http.Request, issues []GitHubIss
 	<h1>Bug Reports</h1>
 	<table>
 	<tr style='text-align: left'>
-	<th>#</th>
-	<th>State</th>
-	<th>User</th>
-	<th>Title</th>
+	<th>ID</th>
+	<th>Issue Title</th>
+	<th>Issue URL</th>
+	{{range .}}
+	<tr>
+	<td>{{.Id}}</td>
+	<td>{{.Title}}</td>
+	<td><a href='{{.Url}}'>{{.Url}}</a></td>
+	</tr>
+	{{end}}
 	</tr>
 	</table>
     <footer>
@@ -92,11 +102,17 @@ func milestonesHandler(w http.ResponseWriter, r *http.Request, milestones []GitH
 	<h1>Miilestones</h1>
 	<table>
 	<tr style='text-align: left'>
-	<th>#</th>
-	<th>State</th>
-	<th>User</th>
-	<th>Title</th>
+	<th>ID</th>
+	<th>Milestone Title</th>
+	<th>Milestone URL</th>
 	</tr>
+	{{range .}}
+	<tr>
+	<td>{{.Id}}</td>
+	<td>{{.Title}}</td>
+	<td><a href='{{.Url}}'>{{.Url}}</a></td>
+	</tr>
+	{{end}}
 	</table>
     <footer>
     <p><a href="/home">Home</a></p>
@@ -117,10 +133,9 @@ func usersHandler(w http.ResponseWriter, r *http.Request, users []GitHubUser) {
 	<h1>Users</h1>
 	<table>
 	<tr style='text-align: left'>
-	<th>#</th>
 	<th>Id</th>
 	<th>Login</th>
-	<th>URL</th>
+	<th>User URL</th>
 	</tr>
 	{{range .}}
 	<tr>
