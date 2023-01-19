@@ -8,7 +8,22 @@ import (
 	"time"
 )
 
-func Serve(project string, repo string, bundle GitHubBundle) {
+
+func QueryGitHubAPI() GitHubBundle {
+	return GitHubBundle{
+		Issues: []GitHubIssue{},
+		Users: []GitHubUser{
+			{Id: 0, Login: "test_user", HtmlUrl: "test_user.github.io"},
+		},
+		Milestones: []GitHubMilestone{},
+	}
+}
+
+func Serve(project string, repo string) {
+
+	fmt.Println("Querying GitHub API....")
+
+	bundle := QueryGitHubAPI()
 
 	fmt.Println("Server Starting")
 
@@ -25,7 +40,7 @@ func Serve(project string, repo string, bundle GitHubBundle) {
 		usersHandler(w, r, bundle.Users)
 	})
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", mux)
 }
 
 func homeHandler(w http.ResponseWriter, r *http.Request) {
@@ -69,7 +84,7 @@ func bugReportHandler(w http.ResponseWriter, r *http.Request, issues []GitHubIss
 		log.Fatal(err)
 	}
 
-	report.Execute(w, IssueBodyParams{})
+	report.Execute(w, issues)
 }
 
 func milestonesHandler(w http.ResponseWriter, r *http.Request, milestones []GitHubMilestone) {
@@ -94,7 +109,7 @@ func milestonesHandler(w http.ResponseWriter, r *http.Request, milestones []GitH
 		log.Fatal(err)
 	}
 
-	report.Execute(w, IssueBodyParams{})
+	report.Execute(w, milestones)
 }
 
 func usersHandler(w http.ResponseWriter, r *http.Request, users []GitHubUser) {
@@ -103,10 +118,17 @@ func usersHandler(w http.ResponseWriter, r *http.Request, users []GitHubUser) {
 	<table>
 	<tr style='text-align: left'>
 	<th>#</th>
-	<th>Username</th>
-	<th>Email</th>
-	<th>Website</th>
+	<th>Id</th>
+	<th>Login</th>
+	<th>URL</th>
 	</tr>
+	{{range .}}
+	<tr>
+	<td>{{.Id}}</td>
+	<td>{{.Login}}</td>
+	<td><a href='{{.HtmlUrl}}'>{{.HtmlUrl}}</a></td>
+	</tr>
+	{{end}}
 	</table>
     <footer>
     <p><a href="/home">Home</a></p>
@@ -119,7 +141,7 @@ func usersHandler(w http.ResponseWriter, r *http.Request, users []GitHubUser) {
 		log.Fatal(err)
 	}
 
-	report.Execute(w, IssueBodyParams{})
+	report.Execute(w, users)
 }
 
 func daysAgo(t time.Time) int {
