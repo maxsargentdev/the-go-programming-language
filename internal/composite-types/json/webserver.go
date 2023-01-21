@@ -8,18 +8,14 @@ import (
 	"time"
 )
 
+func QueryGitHubAPI(project string, repo string) GitHubBundle {
 
-func QueryGitHubAPI() GitHubBundle {
 	return GitHubBundle{
-		Issues: []GitHubIssue{
-			{Id: 0, Title: "test_issue", Url: "github.com/test_project/test_repo/issues/0"},
-		},
+		Issues: getBugReports(project, repo),
 		Users: []GitHubUser{
 			{Id: 0, Login: "test_user", HtmlUrl: "test_user.github.io"},
 		},
-		Milestones: []GitHubMilestone{
-			{Id: 0, Title: "test_milestone", Url: "github.com/test_project/test_repo/milestones/0"},
-		},
+		Milestones: getMilestones(project, repo),
 	}
 }
 
@@ -27,7 +23,7 @@ func Serve(project string, repo string) {
 
 	fmt.Println("Querying GitHub API....")
 
-	bundle := QueryGitHubAPI()
+	bundle := QueryGitHubAPI(project, repo)
 
 	fmt.Println("Server Starting")
 

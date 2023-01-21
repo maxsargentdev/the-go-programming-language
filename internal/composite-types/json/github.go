@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/go-resty/resty/v2"
 	"io"
 	"net/http"
 	"net/url"
@@ -288,6 +289,10 @@ func lockGitHubIssue(headerParams IssueHeaderParams, pathParams IssuePathParams,
 
 // These functions are for the webserver ex4.14
 
+var issueSearchURL = "https://api.github.com/repos/%s/%s/issues"         //owner & repo
+var milestoneSearchURL = "https://api.github.com/repos/%s/%s/milestones" //owner & repo
+var getUserURL = " https://api.github.com/users/%s"                      // username
+
 type GitHubIssue struct {
 	Id            int    `json:"id"`
 	NodeId        string `json:"node_id"`
@@ -443,8 +448,16 @@ type GitHubIssue struct {
 	StateReason       string `json:"state_reason"`
 }
 
-func getBugReports(project string, repo string) {
-	fmt.Println("Got bug reports")
+func getBugReports(project string, repo string) (returnIssues []GitHubIssue) {
+	client := resty.New()
+
+	resp, _ := client.R().
+		EnableTrace().
+		Get(fmt.Sprintf(issueSearchURL, project, repo))
+
+	json.Unmarshal(resp.Body(), &returnIssues)
+
+	return returnIssues
 }
 
 type GitHubMilestone struct {
@@ -485,8 +498,18 @@ type GitHubMilestone struct {
 	DueOn        time.Time `json:"due_on"`
 }
 
-func getMilestones(project string, repo string) {
+func getMilestones(project string, repo string) (returnMilestones []GitHubMilestone) {
 	fmt.Println("Got milestones")
+
+	client := resty.New()
+
+	resp, _ := client.R().
+		EnableTrace().
+		Get(fmt.Sprintf(milestoneSearchURL, project, repo))
+
+	json.Unmarshal(resp.Body(), &returnMilestones)
+
+	return returnMilestones
 }
 
 type GitHubUser struct {
