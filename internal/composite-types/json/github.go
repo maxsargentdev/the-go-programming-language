@@ -448,7 +448,7 @@ type GitHubIssue struct {
 	StateReason       string `json:"state_reason"`
 }
 
-func getBugReports(project string, repo string) (returnIssues []GitHubIssue) {
+func getBugReports(project string, repo string) (returnIssues []GitHubIssue, returnUsers []GitHubUser) {
 	client := resty.New()
 
 	resp, _ := client.R().
@@ -457,7 +457,11 @@ func getBugReports(project string, repo string) (returnIssues []GitHubIssue) {
 
 	json.Unmarshal(resp.Body(), &returnIssues)
 
-	return returnIssues
+	for _, issue := range returnIssues {
+		returnUsers = append(returnUsers, issue.User)
+	}
+
+	return returnIssues, returnUsers
 }
 
 type GitHubMilestone struct {
@@ -533,8 +537,10 @@ type GitHubUser struct {
 	SiteAdmin         bool   `json:"site_admin"`
 }
 
-func getUsers(project string, repo string) {
+func getUsers(project string, repo string) (returnUsers []GitHubUser) {
 	fmt.Println("Got users")
+
+	return returnUsers
 }
 
 type GitHubBundle struct {

@@ -10,12 +10,13 @@ import (
 
 func QueryGitHubAPI(project string, repo string) GitHubBundle {
 
+	issues, issueUsers := getBugReports(project, repo)
+	milestones := getMilestones(project, repo)
+
 	return GitHubBundle{
-		Issues: getBugReports(project, repo),
-		Users: []GitHubUser{
-			{Id: 0, Login: "test_user", HtmlUrl: "test_user.github.io"},
-		},
-		Milestones: getMilestones(project, repo),
+		Issues:     issues,
+		Users:      issueUsers,
+		Milestones: milestones,
 	}
 }
 
