@@ -4,4 +4,6 @@
         - [ ] One file per sub-chapter with all required code
         - [ ] This way exercises will always be grouped under the corresponding subchapter so looking up code is easy
         - [ ] e.g ./internal/arrays/arrays.go will contain code for 4.1 and 4.2
-- [ ] Change command naming convention so that when we run ./the-g0-programming-language, the output is correctly sorted
+- [ ] Change command naming convention so that when we run ./the-go-programming-language, the output is correctly sorted
+- [ ] Full refactorng pass and add unit tests
+- [ ] Update README.md with instructions on running all exercises
