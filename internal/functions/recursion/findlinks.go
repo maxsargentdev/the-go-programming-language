@@ -19,8 +19,12 @@ func FindLinks() {
 
 // visit appends to links each link found in n and returns the result.
 func visit(links []string, n *html.Node) []string {
+
+	// If the node is a HTML element and is of the a tag
 	if n.Type == html.ElementNode && n.Data == "a" {
+		// for each attribute in the a tag
 		for _, a := range n.Attr {
+			// if tghe attribute is a href (link) then append
 			if a.Key == "href" {
 				links = append(links, a.Val)
 			}
@@ -57,5 +61,35 @@ func outline(stack []string, n *html.Node) {
 	}
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		outline(stack, c)
+	}
+}
+
+func GenerateElementMap() {
+	fmt.Println("Generate element map...")
+	doc, err := html.Parse(os.Stdin)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "outline: %v\n", err)
+		os.Exit(1)
+	}
+
+	elementMap := make(map[string]int)
+	fillElementMap(&elementMap, doc)
+	fmt.Println(elementMap)
+
+}
+
+func fillElementMap(elementMap *map[string]int, n *html.Node) {
+
+	if n.Type == html.ElementNode {
+		mapRef := *elementMap
+		mapRef[n.Data]++
+	}
+
+	if n.FirstChild != nil {
+		fillElementMap(elementMap, n.FirstChild)
+	}
+
+	if n.NextSibling != nil {
+		fillElementMap(elementMap, n.NextSibling)
 	}
 }
