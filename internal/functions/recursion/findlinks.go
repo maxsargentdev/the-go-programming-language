@@ -68,7 +68,7 @@ func GenerateElementMap() {
 	fmt.Println("Generate element map...")
 	doc, err := html.Parse(os.Stdin)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "outline: %v\n", err)
+		fmt.Fprintf(os.Stderr, "elementmap: %v\n", err)
 		os.Exit(1)
 	}
 
@@ -91,5 +91,31 @@ func fillElementMap(elementMap *map[string]int, n *html.Node) {
 
 	if n.NextSibling != nil {
 		fillElementMap(elementMap, n.NextSibling)
+	}
+}
+
+func GenerateTextNodes() {
+	fmt.Println("Generating text nodes..........")
+	doc, err := html.Parse(os.Stdin)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "textnodes: %v\n", err)
+		os.Exit(1)
+	}
+
+	descendAndPrint(doc)
+}
+
+func descendAndPrint(n *html.Node) {
+	if n.Type == html.TextNode {
+		fmt.Println(n.Data)
+		fmt.Println(n.)
+	}
+
+	if n.FirstChild != nil {
+		descendAndPrint(n.FirstChild)
+	}
+
+	if n.NextSibling != nil {
+		descendAndPrint(n.NextSibling)
 	}
 }
