@@ -126,3 +126,66 @@ func descendAndPrint(n *html.Node) {
 		descendAndPrint(n.NextSibling)
 	}
 }
+
+func GenerateExtendedVisit() {
+	fmt.Println("Generate extended visit...")
+	doc, err := html.Parse(os.Stdin)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "extendedvisit: %v\n", err)
+		os.Exit(1)
+	}
+
+	hrefs, imgs, styles, scripts := extendedVisit(doc)
+
+	fmt.Println(hrefs)
+	fmt.Println(imgs)
+	fmt.Println(styles)
+	fmt.Println(scripts)
+
+}
+
+// extendedVisit appends hrefs, imgs, style & script elements
+func extendedVisit(n *html.Node) (hrefs, imgs, styles, scripts []string) {
+
+	isHref := n.Type == html.ElementNode && n.Data == "a"
+	//isScript := n.Type == html.ElementNode && n.Data == "script"
+	isImage := n.Type == html.ElementNode && n.Data == "img"
+	//isStyle := n.Type == html.ElementNode && n.Data == "link"
+
+	switch {
+	case isHref:
+		attr, _ := getAttribute("href", *n)
+		hrefs = append(hrefs, attr)
+
+	//case isScript:
+	//	attr, _ := getAttribute("src", *n)
+	//	hrefs = append(hrefs, attr)
+
+	case isImage:
+		attr, _ := getAttribute("src", *n)
+		hrefs = append(hrefs, attr)
+
+		//case isStyle:
+		//	fmt.Println("style found")
+		//
+	
+	}
+
+	if n.FirstChild != nil {
+		hrefs, imgs, styles, scripts = extendedVisit(n.FirstChild)
+	}
+	if n.NextSibling != nil {
+		hrefs, imgs, styles, scripts = extendedVisit(n.NextSibling)
+	}
+
+	return
+}
+
+func getAttribute(attributeKey string, n html.Node) (string, error) {
+	for _, a := range n.Attr {
+		if a.Key == attributeKey {
+			return a.Val, nil
+		}
+	}
+	return "", fmt.Errorf("no attribute found")
+}
