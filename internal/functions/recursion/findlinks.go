@@ -106,9 +106,16 @@ func GenerateTextNodes() {
 }
 
 func descendAndPrint(n *html.Node) {
+	if n.Type == html.ElementNode &&
+		(n.Data == "style" || n.Data == "script") {
+		return
+	}
+
+	// the above works because if the first element in a subtree is script (or style), its entire contents can be omitted
+	// because we return before any recursive call takes place we do not traverse that part of the HTML doc
+
 	if n.Type == html.TextNode {
-		fmt.Println(n.Data)
-		fmt.Println(n.)
+		fmt.Printf("%s\n", n.Data)
 	}
 
 	if n.FirstChild != nil {
