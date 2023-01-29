@@ -135,47 +135,47 @@ func GenerateExtendedVisit() {
 		os.Exit(1)
 	}
 
-	hrefs, imgs, styles, scripts := extendedVisit(doc)
+	var hrefs, imgs []string
+	extendedVisit(&hrefs, &imgs, doc)
 
-	fmt.Println(hrefs)
-	fmt.Println(imgs)
-	fmt.Println(styles)
-	fmt.Println(scripts)
+	fmt.Println("-------------------------------------------------------------------------------------------------")
+	fmt.Println("Hrefs found:")
+	fmt.Println("-------------------------------------------------------------------------------------------------")
+	for h, href := range hrefs {
+		fmt.Printf("%d - %s\n", h, href)
+	}
+
+	fmt.Println("-------------------------------------------------------------------------------------------------")
+	fmt.Println("Images found:")
+	fmt.Println("-------------------------------------------------------------------------------------------------")
+	for i, img := range imgs {
+		fmt.Printf("%d - %s\n", i, img)
+	}
 
 }
 
-// extendedVisit appends hrefs, imgs, style & script elements
-func extendedVisit(n *html.Node) (hrefs, imgs, styles, scripts []string) {
+// extendedVisit appends links to existing lists
+func extendedVisit(hrefs, imgs *[]string, n *html.Node) {
 
 	isHref := n.Type == html.ElementNode && n.Data == "a"
-	//isScript := n.Type == html.ElementNode && n.Data == "script"
 	isImage := n.Type == html.ElementNode && n.Data == "img"
-	//isStyle := n.Type == html.ElementNode && n.Data == "link"
 
 	switch {
 	case isHref:
 		attr, _ := getAttribute("href", *n)
-		hrefs = append(hrefs, attr)
-
-	//case isScript:
-	//	attr, _ := getAttribute("src", *n)
-	//	hrefs = append(hrefs, attr)
+		*hrefs = append(*hrefs, attr)
 
 	case isImage:
 		attr, _ := getAttribute("src", *n)
-		hrefs = append(hrefs, attr)
+		*imgs = append(*imgs, attr)
 
-		//case isStyle:
-		//	fmt.Println("style found")
-		//
-	
 	}
 
 	if n.FirstChild != nil {
-		hrefs, imgs, styles, scripts = extendedVisit(n.FirstChild)
+		extendedVisit(hrefs, imgs, n.FirstChild)
 	}
 	if n.NextSibling != nil {
-		hrefs, imgs, styles, scripts = extendedVisit(n.NextSibling)
+		extendedVisit(hrefs, imgs, n.NextSibling)
 	}
 
 	return
