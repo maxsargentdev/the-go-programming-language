@@ -7,3 +7,5 @@
 - [ ] Change command naming convention so that when we run ./the-go-programming-language, the output is correctly sorted
 - [ ] Full refactorng pass and add unit tests
 - [ ] Update README.md with instructions on running all exercises
+- [ ] Could name the packages c1 c2 etc then I could hit them as c1.<program>
+- [ ]

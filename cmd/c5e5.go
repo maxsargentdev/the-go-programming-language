@@ -1,14 +1,15 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
+	"the-go-programming-language/internal/functions/multireturn"
 
 	"github.com/spf13/cobra"
 )
+
+var c5e5URL string
 
 // c5e5Cmd represents the c5e5 command
 var c5e5Cmd = &cobra.Command{
@@ -21,12 +22,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c5e5 called")
+		multireturn.RunCountWordsAndImages(c5e5URL)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c5e5Cmd)
+	c5e5Cmd.Flags().StringVarP(&c5e5URL, "url", "u", "https://www.xkcd.com", "url to use for word and image count")
 
 	// Here you will define your flags and configuration settings.
 
