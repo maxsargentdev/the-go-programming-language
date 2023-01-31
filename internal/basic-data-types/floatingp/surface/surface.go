@@ -59,19 +59,19 @@ func Surface(out io.Writer, choice string, color bool) {
 		"width='%d' height='%d'>", width, height)
 	for i := 0; i < cells; i++ {
 		for j := 0; j < cells; j++ {
-			ax, ay, _, err := corner(function, i+1, j)
+			ax, ay, _, err := cornerWithBareReturn(function, i+1, j)
 			if err != nil {
 				continue
 			}
-			bx, by, _, err := corner(function, i, j)
+			bx, by, _, err := cornerWithBareReturn(function, i, j)
 			if err != nil {
 				continue
 			}
-			cx, cy, _, err := corner(function, i, j+1)
+			cx, cy, _, err := cornerWithBareReturn(function, i, j+1)
 			if err != nil {
 				continue
 			}
-			dx, dy, z, err := corner(function, i+1, j+1)
+			dx, dy, z, err := cornerWithBareReturn(function, i+1, j+1)
 			if err != nil {
 				continue
 			}
@@ -100,6 +100,22 @@ func corner(fn pointFunction, i int, j int) (float64, float64, float64, error) {
 	sx := width/2 + (x-y)*cos30*xyscale
 	sy := height/2 + (x+y)*sin30*xyscale - z*zscale
 	return sx, sy, z, nil
+}
+
+func cornerWithBareReturn(fn pointFunction, i, j int) (sx, sy, z float64, err error) {
+	x := xyrange * (float64(i)/cells - 0.5)
+	y := xyrange * (float64(j)/cells - 0.5)
+
+	z = fn(x, y)
+
+	if math.IsInf(z, 0) {
+		return 0, 0, 0, errors.New("non finite polygon generated")
+	}
+
+	sx = width/2 + (x-y)*cos30*xyscale
+	sy = height/2 + (x+y)*sin30*xyscale - z*zscale
+
+	return
 }
 
 func mountain(x, y float64) float64 {
