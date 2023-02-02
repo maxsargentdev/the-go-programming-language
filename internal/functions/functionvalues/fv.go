@@ -40,6 +40,16 @@ var depth int
 
 func startElement(n *html.Node) {
 
+	if n.Type == html.ElementNode && n.Attr != nil {
+		fmt.Printf("%*s<%s", depth*2, "", n.Data)
+		for _, attr := range n.Attr {
+			fmt.Printf(" %s=\"%s\"", attr.Key, attr.Val)
+		}
+		fmt.Printf(">\n")
+		depth++
+		return
+	}
+
 	if n.Type == html.ElementNode {
 		fmt.Printf("%*s<%s>\n", depth*2, "", n.Data)
 		depth++
@@ -62,3 +72,10 @@ func endElement(n *html.Node) {
 		fmt.Printf("%*s</%s>\n", depth*2, "", n.Data)
 	}
 }
+
+// Still todo:
+//
+//- Print comments
+//- Print text nodes
+//- Remove trailing tag for elements with no children
+//- Write a test
