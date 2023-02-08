@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"golang.org/x/net/html"
 	"net/http"
+	"strings"
 )
 
 func RunHTMLPrettyPrint(url string) {
@@ -40,6 +41,7 @@ var depth int
 
 func startElement(n *html.Node) {
 
+	// Element node with attributes
 	if n.Type == html.ElementNode && n.Attr != nil {
 		fmt.Printf("%*s<%s", depth*2, "", n.Data)
 		for _, attr := range n.Attr {
@@ -50,22 +52,22 @@ func startElement(n *html.Node) {
 		return
 	}
 
+	// Comment nodes, make sure they get indented correctly with sprintf hack
+	if n.Type == html.CommentNode {
+		fmt.Printf("%*s<!--%s", depth*2, "", strings.ReplaceAll(n.Data, "\n", fmt.Sprintf("\n%*s", depth*2, "")))
+		fmt.Printf("-->\n")
+		return
+	}
+
+	// Standard element node
 	if n.Type == html.ElementNode {
 		fmt.Printf("%*s<%s>\n", depth*2, "", n.Data)
 		depth++
 	}
 
-	//if n.Type == html.TextNode {
-	//	fmt.Printf("%s", strings.ReplaceAll(n.Data, "\n", ""))
-	//}
 }
 
 func endElement(n *html.Node) {
-
-	//if n.Type == html.ElementNode && n.PrevSibling.Type == html.TextNode {
-	//	fmt.Printf("%*s</%s>", depth*2, "", n.Data)
-	//	return
-	//}
 
 	if n.Type == html.ElementNode {
 		depth--
@@ -74,8 +76,6 @@ func endElement(n *html.Node) {
 }
 
 // Still todo:
-//
-//- Print comments
 //- Print text nodes
 //- Remove trailing tag for elements with no children
 //- Write a test
