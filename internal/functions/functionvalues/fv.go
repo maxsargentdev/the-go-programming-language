@@ -59,6 +59,15 @@ func startElement(n *html.Node) {
 		return
 	}
 
+	if n.Type == html.TextNode && (n.Parent.Data == "script" || n.Parent.Data == "style") {
+		for _, line := range strings.Split(n.Data, "\n") {
+			line = strings.TrimSpace(line)
+			if line != "" && line != "\n" {
+				fmt.Printf("%*s%s\n", depth*2, "", line)
+			}
+		}
+	}
+
 	// Standard element node
 	if n.Type == html.ElementNode {
 		fmt.Printf("%*s<%s>\n", depth*2, "", n.Data)
