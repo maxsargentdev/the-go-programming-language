@@ -25,21 +25,27 @@ func RunHTMLPrettyPrint(url string) {
 
 }
 
-func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
+func forEachNode(n *html.Node, pre, post func(n *html.Node) (b bool)) {
 	if pre != nil {
-		pre(n)
+		stop := pre(n)
+		if stop {
+			return
+		}
 	}
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		forEachNode(c, pre, post)
 	}
 	if post != nil {
-		post(n)
+		stop := post(n)
+		if stop {
+			return
+		}
 	}
 }
 
 var depth int
 
-func startElement(n *html.Node) {
+func startElement(n *html.Node) (b bool) {
 
 	// Element node with attributes
 	if n.Type == html.ElementNode && n.Attr != nil {
@@ -49,14 +55,14 @@ func startElement(n *html.Node) {
 		}
 		fmt.Printf(">\n")
 		depth++
-		return
+		return false
 	}
 
 	// Comment nodes, make sure they get indented correctly with sprintf hack
 	if n.Type == html.CommentNode {
 		fmt.Printf("%*s<!--%s", depth*2, "", strings.ReplaceAll(n.Data, "\n", fmt.Sprintf("\n%*s", depth*2, "")))
 		fmt.Printf("-->\n")
-		return
+		return false
 	}
 
 	if n.Type == html.TextNode && (n.Parent.Data == "script" || n.Parent.Data == "style") {
@@ -66,6 +72,7 @@ func startElement(n *html.Node) {
 				fmt.Printf("%*s%s\n", depth*2, "", line)
 			}
 		}
+		return false
 	}
 
 	// Standard element node
@@ -74,17 +81,52 @@ func startElement(n *html.Node) {
 		depth++
 	}
 
+	return false
 }
 
-func endElement(n *html.Node) {
+func endElement(n *html.Node) (b bool) {
 
 	if n.Type == html.ElementNode {
 		depth--
 		fmt.Printf("%*s</%s>\n", depth*2, "", n.Data)
 	}
+	return false
 }
 
-// Still todo:
+// c5e7 Still todo:
 //- Print text nodes
 //- Remove trailing tag for elements with no children
 //- Write a test
+
+func RunGetElementByID(url string, id string) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return
+	}
+	doc, err := html.Parse(resp.Body)
+
+	resp.Body.Close()
+	if err != nil {
+		err = fmt.Errorf("parsing HTML: %s", err)
+		return
+	}
+
+	ElementByID(doc, id)
+}
+
+func ElementByID(doc *html.Node, id string) *html.Node {
+
+	pre := func(n *html.Node) (b bool) {
+		for _, attr := range n.Attr {
+			if attr.Key == "id" && attr.Val == id {
+				return true
+			}
+		}
+		return false
+	}
+
+	forEachNode(doc, pre, nil)
+
+	tmp := html.Node{}
+	return &tmp
+}
