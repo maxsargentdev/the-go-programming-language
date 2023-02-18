@@ -130,3 +130,23 @@ func ElementByID(doc *html.Node, id string) *html.Node {
 	tmp := html.Node{}
 	return &tmp
 }
+
+func RunExpand(s string) {
+	f := func(s string) string {
+		return strings.ToUpper(s)
+	}
+	expand(s, f)
+}
+
+func expand(s string, f func(string) string) (result string) {
+	items := strings.Split(s, " ")
+	for i, item := range items {
+		if strings.HasPrefix(item, "$") {
+			items[i] = f(item[1:])
+		}
+	}
+
+	result = strings.Join(items, " ")
+	fmt.Println(result)
+	return
+}
