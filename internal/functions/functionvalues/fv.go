@@ -181,41 +181,31 @@ func topoSort(m map[string][]string) []string {
 	return order
 }
 
-var prereqs = map[string][]string{
-	"algorithms": {"data structures"},
-	"calculus":   {"linear algebra"},
-	"compilers": {
-		"data structures",
-		"formal languages",
-		"computer organization",
-	},
-	"data structures":       {"discrete math"},
-	"databases":             {"data structures"},
-	"discrete math":         {"intro to programming"},
-	"formal languages":      {"discrete math"},
-	"networks":              {"operating systems"},
-	"operating systems":     {"data structures", "computer organization"},
-	"programming languages": {"data structures", "computer organization"},
+func RunTopoSortMap(m map[string]map[string]bool) {
+	for i, course := range topoSortMap(m) {
+		fmt.Printf("%d:\t%s\n", i+1, course)
+	}
 }
 
-func RunTopoSortMap(m map[string][]string) []string {
+func topoSortMap(m map[string]map[string]bool) []string {
 	var order []string
 	seen := make(map[string]bool)
-	var visitAll func(items map[string][]string)
+	var visitAll func(items map[string]bool)
 
-	visitAll = func(items map[string][]string) {
-		for key, value := range items {
-			//if !seen[item] {
-			//	seen[item] = true
-			//	visitAll(m)
-			//	order = append(order, item)
-			//}
-			seen[key] = true
-			fmt.Printf("currently visiting %s-%s\n", key, value)
-
+	visitAll = func(items map[string]bool) {
+		for item, _ := range items {
+			if !seen[item] {
+				seen[item] = true
+				visitAll(m[item])
+				order = append(order, item)
+			}
 		}
 	}
 
-	visitAll(m)
+	var keys = make(map[string]bool)
+	for key := range m {
+		keys[key] = true
+	}
+	visitAll(keys)
 	return order
 }
