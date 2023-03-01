@@ -1,14 +1,33 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
+	"the-go-programming-language/internal/functions/functionvalues"
 
 	"github.com/spf13/cobra"
 )
+
+var c5e11prereqs = map[string][]string{
+	"algorithms": {"data structures"},
+	"calculus":   {"linear algebra"},
+
+	"compilers": {
+		"data structures",
+		"formal languages",
+		"computer organization",
+	},
+
+	"data structures":       {"discrete math"},
+	"databases":             {"data structures"},
+	"discrete math":         {"intro to programming"},
+	"formal languages":      {"discrete math"},
+	"networks":              {"operating systems"},
+	"operating systems":     {"data structures", "computer organization"},
+	"programming languages": {"data structures", "computer organization"},
+	"linear algebra":        {"calculus"},
+}
 
 // c5e11Cmd represents the c5e11 command
 var c5e11Cmd = &cobra.Command{
@@ -21,7 +40,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c5e11 called")
+		functionvalues.RunTopoSortWithCycleDetection(c5e11prereqs)
 	},
 }
 

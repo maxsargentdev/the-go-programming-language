@@ -2,8 +2,10 @@ package functionvalues
 
 import (
 	"fmt"
+	"golang.org/x/exp/slices"
 	"golang.org/x/net/html"
 	"net/http"
+	"os"
 	"sort"
 	"strings"
 )
@@ -206,6 +208,43 @@ func topoSortMap(m map[string]map[string]bool) []string {
 	for key := range m {
 		keys[key] = true
 	}
+	visitAll(keys)
+	return order
+}
+
+func RunTopoSortWithCycleDetection(prereqs map[string][]string) {
+	for i, course := range topoSortWithCycleDetection(prereqs) {
+		fmt.Printf("%d:\t%s\n", i+1, course)
+	}
+}
+
+func topoSortWithCycleDetection(m map[string][]string) []string {
+	var order []string
+	seen := make(map[string]bool)
+	var visitAll func(items []string)
+
+	visitAll = func(items []string) {
+		for _, item := range items {
+
+			for _, requirement := range m[item] {
+				if slices.Contains(m[requirement], item) {
+					fmt.Printf("Cycle detected: %s <-> %s\n", item, requirement)
+					os.Exit(1)
+				}
+			}
+
+			if !seen[item] {
+				seen[item] = true
+				visitAll(m[item])
+				order = append(order, item)
+			}
+		}
+	}
+	var keys []string
+	for key := range m {
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
 	visitAll(keys)
 	return order
 }
