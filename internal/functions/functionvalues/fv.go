@@ -24,11 +24,11 @@ func RunHTMLPrettyPrint(url string) {
 		return
 	}
 
-	forEachNode(doc, startElement, endElement)
+	forEachNodeBool(doc, startElement, endElement)
 
 }
 
-func forEachNode(n *html.Node, pre, post func(n *html.Node) (b bool)) {
+func forEachNodeBool(n *html.Node, pre, post func(n *html.Node) (b bool)) {
 	if pre != nil {
 		stop := pre(n)
 		if stop {
@@ -36,7 +36,7 @@ func forEachNode(n *html.Node, pre, post func(n *html.Node) (b bool)) {
 		}
 	}
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		forEachNode(c, pre, post)
+		forEachNodeBool(c, pre, post)
 	}
 	if post != nil {
 		stop := post(n)
@@ -128,7 +128,7 @@ func ElementByID(doc *html.Node, id string) *html.Node {
 		return false
 	}
 
-	forEachNode(doc, pre, nil)
+	forEachNodeBool(doc, pre, nil)
 
 	tmp := html.Node{}
 	return &tmp
@@ -247,4 +247,60 @@ func topoSortWithCycleDetection(m map[string][]string) []string {
 	sort.Strings(keys)
 	visitAll(keys)
 	return order
+}
+
+// ////////////////////////////////////////////////////////
+func RunOutline(url string) {
+	outline(url)
+}
+
+func outline(url string) error {
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	var depth int
+
+	var startElement func(n *html.Node)
+	startElement = func(n *html.Node) {
+		if n.Type == html.ElementNode {
+			fmt.Printf("%*s<%s>\n", depth*2, "", n.Data)
+			depth++
+		}
+	}
+
+	var endElement func(n *html.Node)
+	endElement = func(n *html.Node) {
+		if n.Type == html.ElementNode {
+			depth--
+			fmt.Printf("%*s</%s>\n", depth*2, "", n.Data)
+		}
+	}
+
+	doc, err := html.Parse(resp.Body)
+	if err != nil {
+		return err
+	}
+
+	//!+call
+	forEachNode(doc, startElement, endElement)
+	//!-call
+
+	return nil
+}
+
+func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
+	if pre != nil {
+		pre(n)
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		forEachNode(c, pre, post)
+	}
+
+	if post != nil {
+		post(n)
+	}
 }

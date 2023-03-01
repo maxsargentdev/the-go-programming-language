@@ -1,14 +1,15 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
+	"the-go-programming-language/internal/functions/functionvalues"
 
 	"github.com/spf13/cobra"
 )
+
+var c5e12URL string
 
 // c5e12Cmd represents the c5e12 command
 var c5e12Cmd = &cobra.Command{
@@ -21,12 +22,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c5e12 called")
+		functionvalues.RunOutline(c5e12URL)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c5e12Cmd)
+	c5e12Cmd.Flags().StringVarP(&c5e12URL, "url", "u", "https://www.xkcd.com", "url to use for outline with anonymous func")
 
 	// Here you will define your flags and configuration settings.
 
