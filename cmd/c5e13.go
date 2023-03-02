@@ -1,14 +1,14 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
+	"the-go-programming-language/internal/functions/functionvalues"
 )
+
+var c5e13SearchTerms []string
 
 // c5e13Cmd represents the c5e13 command
 var c5e13Cmd = &cobra.Command{
@@ -21,13 +21,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c5e13 called")
+		functionvalues.RunCrawl(c5e13SearchTerms)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c5e13Cmd)
-
+	searchCmd.Flags().StringSliceVarP(&c5e13SearchTerms, "work-list", "w", []string{"https://golang.org"}, "An comma separated string of crawl targets")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
