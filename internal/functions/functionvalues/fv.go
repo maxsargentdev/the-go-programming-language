@@ -5,6 +5,7 @@ import (
 	"golang.org/x/exp/slices"
 	"golang.org/x/net/html"
 	"io"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/url"
@@ -348,20 +349,6 @@ func RunCrawl(worklist []string) {
 	breadthFirst(crawl, worklist)
 }
 
-func breadthFirst(f func(item string) []string, worklist []string) {
-	seen := make(map[string]bool)
-	for len(worklist) > 0 {
-		items := worklist
-		worklist = nil
-		for _, item := range items {
-			if !seen[item] {
-				seen[item] = true
-				worklist = append(worklist, f(item)...)
-			}
-		}
-	}
-}
-
 func crawl(urlstring string) []string {
 	url, err := url.Parse(urlstring)
 	if err != nil {
@@ -401,4 +388,63 @@ func crawl(urlstring string) []string {
 func timeStamp() string {
 	ts := time.Now().UTC().Format(time.RFC3339)
 	return strings.Replace(ts, ":", "", -1) // get rid of offensive colons
+}
+
+// ////////////////////////////////////////////////////////////////////
+func breadthFirst(f func(item string) []string, worklist []string) {
+	seen := make(map[string]bool)
+	for len(worklist) > 0 {
+		items := worklist
+		worklist = nil
+		for _, item := range items {
+			if !seen[item] {
+				seen[item] = true
+				worklist = append(worklist, f(item)...)
+			}
+		}
+	}
+}
+
+func RunDirectorySearch() {
+	var worklist []string
+
+	worklist = append(worklist, getAllDirElements(".")...)
+
+	breadthFirst(directorySearch, worklist)
+}
+
+func getAllDirElements(dir string) []string {
+	var elements []string
+
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, file := range files {
+		elements = append(elements, fmt.Sprintf("%s/%s", dir, file.Name()))
+	}
+
+	return elements
+}
+
+func directorySearch(item string) []string {
+	file, err := os.Open(item)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer file.Close()
+
+	fileInfo, err := file.Stat()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if fileInfo.IsDir() {
+		return getAllDirElements(fmt.Sprintf("%s", item))
+	} else {
+		fmt.Println(item)
+		return []string{}
+	}
 }
