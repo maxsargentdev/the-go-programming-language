@@ -1,14 +1,16 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
+	"the-go-programming-language/internal/functions/variadic"
 
 	"github.com/spf13/cobra"
 )
+
+var c5e17URL string
+var c5e17Terms []string
 
 // c5e17Cmd represents the c5e17 command
 var c5e17Cmd = &cobra.Command{
@@ -21,13 +23,14 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c5e17 called")
+		variadic.RunGetElementsByTagName(c5e17URL, c5e17Terms...)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c5e17Cmd)
-
+	c5e17Cmd.Flags().StringVarP(&c5e17URL, "url", "u", "https://xkcd.com", "the url to use")
+	c5e17Cmd.Flags().StringSliceVarP(&c5e17Terms, "terms", "t", []string{"div"}, "the search terms")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

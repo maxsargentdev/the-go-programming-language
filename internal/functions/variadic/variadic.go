@@ -1,6 +1,11 @@
 package variadic
 
-import "fmt"
+import (
+	"fmt"
+	"golang.org/x/exp/slices"
+	"golang.org/x/net/html"
+	"net/http"
+)
 
 func Max(integers ...int) {
 
@@ -54,5 +59,49 @@ func Join(sep string, strings ...string) string {
 		}
 	}
 	fmt.Println(returnMe)
+	return returnMe
+}
+
+func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
+	if pre != nil {
+		pre(n)
+	}
+
+	for c := n.FirstChild; c != nil; c = c.NextSibling {
+		forEachNode(c, pre, post)
+	}
+
+	if post != nil {
+		post(n)
+	}
+}
+
+func RunGetElementsByTagName(url string, names ...string) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return
+	}
+	doc, err := html.Parse(resp.Body)
+
+	resp.Body.Close()
+	if err != nil {
+		err = fmt.Errorf("parsing HTML: %s", err)
+		return
+	}
+	elementsByTagName(doc, names...)
+}
+
+func elementsByTagName(node *html.Node, names ...string) []*html.Node {
+
+	returnMe := []*html.Node{}
+
+	pre := func(n *html.Node) {
+		if n.Type == html.ElementNode && slices.Contains(names, n.Data) {
+			returnMe = append(returnMe, n)
+		}
+	}
+
+	forEachNode(node, pre, nil)
+
 	return returnMe
 }
