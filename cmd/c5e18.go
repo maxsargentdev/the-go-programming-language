@@ -1,14 +1,15 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"fmt"
+	"the-go-programming-language/internal/functions/deferred"
 
 	"github.com/spf13/cobra"
 )
+
+var c5e18URL string
 
 // c5e18Cmd represents the c5e18 command
 var c5e18Cmd = &cobra.Command{
@@ -21,12 +22,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c5e18 called")
+		deferred.RunFetch(c5e18URL)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c5e18Cmd)
+	c5e18Cmd.Flags().StringVarP(&c5e18URL, "url", "u", "https://www.xkcd.com", "the url to use")
 
 	// Here you will define your flags and configuration settings.
 
