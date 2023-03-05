@@ -33,3 +33,26 @@ func Min(integers ...int) {
 	}
 	fmt.Printf("%d\n", min)
 }
+
+func Join(sep string, strings ...string) string {
+
+	if sep == "" {
+		fmt.Println("no input provided")
+		return ""
+	}
+	if len(strings) == 0 {
+		fmt.Println("no input provided")
+		return ""
+	}
+
+	var returnMe string
+	for i, v := range strings {
+		if i > 0 {
+			returnMe = fmt.Sprintf("%s%s%s", returnMe, sep, v)
+		} else {
+			returnMe = fmt.Sprintf("%s%s", returnMe, v)
+		}
+	}
+	fmt.Println(returnMe)
+	return returnMe
+}
