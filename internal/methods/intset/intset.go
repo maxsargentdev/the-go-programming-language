@@ -16,18 +16,18 @@ import (
 // An IntSet is a set of small non-negative integers.
 // Its zero value represents the empty set.
 type IntSet struct {
-	Words []uint // export this in my example and just use uint for compatability with cobra
+	Words []uint64 // export this in my example and just use uint64 for compatability with cobra
 }
 
 // Has reports whether the set contains the non-negative value x.
 func (s *IntSet) Has(x int) bool {
-	word, bit := x/64, uint(x%64)
+	word, bit := x/64, uint64(x%64)
 	return word < len(s.Words) && s.Words[word]&(1<<bit) != 0
 }
 
 // Add adds the non-negative value x to the set.
 func (s *IntSet) Add(x int) {
-	word, bit := x/64, uint(x%64)
+	word, bit := x/64, uint64(x%64)
 	for word >= len(s.Words) {
 		s.Words = append(s.Words, 0)
 	}
@@ -58,7 +58,7 @@ func (s *IntSet) String() string {
 			continue
 		}
 		for j := 0; j < 64; j++ {
-			if word&(1<<uint(j)) != 0 {
+			if word&(1<<uint64(j)) != 0 {
 				if buf.Len() > len("{") {
 					buf.WriteByte(' ')
 				}
@@ -84,6 +84,12 @@ func (s *IntSet) Clear() {
 	s.Words = nil
 }
 
-func (*IntSet) Copy() *IntSet {
-	return &IntSet{Words: []uint{}}
+func (s *IntSet) Copy() *IntSet {
+	var copyOfWords []uint64
+
+	for _, ele := range s.Words {
+		copyOfWords = append(copyOfWords, ele)
+	}
+
+	return &IntSet{Words: copyOfWords}
 }

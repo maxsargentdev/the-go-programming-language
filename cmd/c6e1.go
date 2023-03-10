@@ -10,6 +10,7 @@ import (
 )
 
 var c6e1IntSet []uint
+var c6e1Int64Set []uint64
 
 // c6e1Cmd represents the c6e1 command
 var c6e1Cmd = &cobra.Command{
@@ -29,6 +30,10 @@ to quickly create a Cobra application.`,
 func init() {
 	rootCmd.AddCommand(c6e1Cmd)
 	c6e1Cmd.Flags().UintSliceVarP(&c6e1IntSet, "intset", "i", []uint{1, 2, 3, 4, 5}, "An comma separated string of integer elements")
+
+	for _, v := range c6e1IntSet {
+		c6e1Int64Set = append(c6e1Int64Set, uint64(v))
+	}
 
 	// Here you will define your flags and configuration settings.
 
