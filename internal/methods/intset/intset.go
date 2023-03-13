@@ -72,12 +72,17 @@ func (s *IntSet) String() string {
 
 //!-string
 
-func (*IntSet) Len() int {
-	return 0
+func (s *IntSet) Len() int {
+	var count int
+	for _, _ = range s.Words {
+		count++
+	}
+	return count
 }
 
-func (*IntSet) Remove(x int) {
-	return
+func (s *IntSet) Remove(x int) {
+	word, bit := x/64, uint(x%64)
+	s.Words[word] &^= 1 << bit
 }
 
 func (s *IntSet) Clear() {

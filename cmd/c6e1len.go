@@ -8,7 +8,7 @@ import (
 
 // lenCmd get the length of the intset
 var lenCmd = &cobra.Command{
-	Use:   "clear",
+	Use:   "len",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -18,9 +18,7 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		intSet := intset.IntSet{Words: c6e1Int64Set}
-		fmt.Printf("%v\n", intSet)
-		intSet.Clear()
-		fmt.Printf("%v\n", intSet)
+		fmt.Printf("%d\n", intSet.Len())
 	},
 }
 
