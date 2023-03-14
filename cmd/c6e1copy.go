@@ -17,10 +17,13 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		intSet := intset.IntSet{Words: c6e1Int64Set}
-		fmt.Printf("%v\n", intSet)
-		copiedIntSet := *intSet.Copy()
-		fmt.Printf("%v\n", copiedIntSet)
+		intSet := intset.IntSet{}
+		intSet.Add(1)
+		intSet.Add(44)
+		intSet.Add(9)
+		fmt.Println(intSet.String())
+		copiedIntSet := intSet.Copy()
+		fmt.Println(copiedIntSet.String())
 	},
 }
 

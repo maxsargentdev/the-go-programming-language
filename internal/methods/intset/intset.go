@@ -16,7 +16,7 @@ import (
 // An IntSet is a set of small non-negative integers.
 // Its zero value represents the empty set.
 type IntSet struct {
-	Words []uint64 // export this in my example and just use uint64 for compatability with cobra
+	Words []uint64 // export this in my example
 }
 
 // Has reports whether the set contains the non-negative value x.
@@ -72,17 +72,42 @@ func (s *IntSet) String() string {
 
 //!-string
 
+// Returns the number of elements
 func (s *IntSet) Len() int {
 	var count int
-	for _, _ = range s.Words {
-		count++
+	for _, word := range s.Words {
+		count += popcount(word)
 	}
 	return count
 }
 
+// Returns number of 1 bits
+func popcount(x uint64) (count int) {
+	for x != 0 {
+		count++
+		x &= x - 1
+	}
+	return
+}
+
 func (s *IntSet) Remove(x int) {
-	word, bit := x/64, uint(x%64)
-	s.Words[word] &^= 1 << bit
+	//word, bit := x/64, uint(x%64)
+	//fmt.Println("word:", word)
+	//fmt.Println("bit (0 index):", bit)
+	//fmt.Printf("integer: %d\n", uint64(s.Words[bit]))
+	//
+	//fmt.Printf("binary: %b\n", ^uint64(0))
+	//fmt.Printf("binary: %b\n", (uint64(1) << bit))
+	//fmt.Printf("binary: %b\n", (^uint64(0))^(uint64(1)<<bit))
+	//fmt.Printf("binary: %b\n", s.Words)
+	//mask := (^uint64(0)) ^ (uint64(1) << bit)
+	//
+	//s.Words[word] &= mask
+	//fmt.Printf("%v\n", *s)
+	if s.Has(x) {
+		word, bit := x/64, uint(x%64)
+		s.Words[word] &^= 1 << bit
+	}
 }
 
 func (s *IntSet) Clear() {
