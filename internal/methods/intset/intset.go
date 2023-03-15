@@ -123,3 +123,9 @@ func (s *IntSet) Copy() *IntSet {
 
 	return &IntSet{Words: copyOfWords}
 }
+
+func (s *IntSet) AddAll(intss ...int) {
+	for _, v := range intss {
+		s.Add(v)
+	}
+}
