@@ -129,3 +129,18 @@ func (s *IntSet) AddAll(intss ...int) {
 		s.Add(v)
 	}
 }
+
+// IntersectWith
+func (s *IntSet) IntersectWith(t *IntSet) {
+
+}
+
+// DifferenceWith
+func (s *IntSet) DifferenceWith(t *IntSet) {
+
+}
+
+// SymemetricDifference
+func (s *IntSet) SymemetricDifference(t *IntSet) {
+
+}
