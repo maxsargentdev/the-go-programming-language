@@ -37,10 +37,10 @@ func (s *IntSet) Add(x int) {
 // UnionWith sets s to the union of s and t.
 func (s *IntSet) UnionWith(t *IntSet) {
 	for i, tword := range t.Words {
-		if i < len(s.Words) {
-			s.Words[i] |= tword
-		} else {
-			s.Words = append(s.Words, tword)
+		if i < len(s.Words) { // for all the words that also exist in s
+			s.Words[i] &= tword // calculate the intersection with bitwise OR
+		} else { // for the words that dont exist in s
+			s.Words = append(s.Words, tword) // slap em on the end, this is a UNION after all
 		}
 	}
 }
@@ -132,11 +132,17 @@ func (s *IntSet) AddAll(intss ...int) {
 
 // IntersectWith
 func (s *IntSet) IntersectWith(t *IntSet) {
+	for i, tword := range t.Words {
 
+		if i < len(s.Words) { // for all the words that also exist in s
+			s.Words[i] &= tword // calculate the intersection with bitwise AND
+		} // no else needed here, drop the extras they dont intersect
+	}
 }
 
 // DifferenceWith
 func (s *IntSet) DifferenceWith(t *IntSet) {
+	// this is just what is in t that is not in s
 
 }
 

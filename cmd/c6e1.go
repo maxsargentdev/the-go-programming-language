@@ -5,12 +5,12 @@ package cmd
 
 import (
 	"fmt"
+	"the-go-programming-language/internal/methods/intset"
 
 	"github.com/spf13/cobra"
 )
 
-var c6e1IntSet []uint
-var c6e1Int64Set []uint64
+var c6e1IntSet intset.IntSet
 
 // c6e1Cmd represents the c6e1 command
 var c6e1Cmd = &cobra.Command{
@@ -29,11 +29,13 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(c6e1Cmd)
-	c6e1Cmd.Flags().UintSliceVarP(&c6e1IntSet, "intset", "i", []uint{1, 1, 1, 1, 1}, "An comma separated string of integer elements")
 
-	for _, v := range c6e1IntSet {
-		c6e1Int64Set = append(c6e1Int64Set, uint64(v))
-	} // the issue is here, I should be creating a word list as a bit vector, which in this case is only one word:
+	c6e1IntSet.Add(1)
+	c6e1IntSet.Add(2)
+	c6e1IntSet.Add(3)
+	c6e1IntSet.Add(4)
+
+	// the issue is here, I should be creating a word list as a bit vector, which in this case is only one word:
 	// ......0011111 (starting from one on the right across 64 values
 
 	// Here you will define your flags and configuration settings.

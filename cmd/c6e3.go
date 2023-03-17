@@ -1,14 +1,16 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
+	"the-go-programming-language/internal/methods/intset"
 
 	"github.com/spf13/cobra"
 )
+
+var c6e3IntSet intset.IntSet
 
 // c6e3Cmd represents the c6e3 command
 var c6e3Cmd = &cobra.Command{
@@ -28,6 +30,10 @@ to quickly create a Cobra application.`,
 func init() {
 	rootCmd.AddCommand(c6e3Cmd)
 
+	c6e3IntSet.Add(5)
+	c6e3IntSet.Add(6)
+	c6e3IntSet.Add(7)
+	c6e3IntSet.Add(8)
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

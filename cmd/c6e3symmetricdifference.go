@@ -1,13 +1,12 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 )
 
-// lenCmd get the length of the intset
-var lenCmd = &cobra.Command{
-	Use:   "len",
+// clearCmd clears the intset
+var symmetricDifferenceCmd = &cobra.Command{
+	Use:   "symmetric-difference",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -16,12 +15,12 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(c6e1IntSet.Len())
+
 	},
 }
 
 func init() {
-	c6e1Cmd.AddCommand(lenCmd)
+	c6e3Cmd.AddCommand(symmetricDifferenceCmd)
 
 	// Here you will define your flags and configuration settings.
 

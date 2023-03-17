@@ -1,13 +1,13 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
+	"the-go-programming-language/internal/methods/intset"
 )
 
-// lenCmd get the length of the intset
-var lenCmd = &cobra.Command{
-	Use:   "len",
+// clearCmd clears the intset
+var intersectCmd = &cobra.Command{
+	Use:   "intersect",
 	Short: "A brief description of your command",
 	Long: `A longer description that spans multiple lines and likely contains examples
 and usage of using your command. For example:
@@ -16,12 +16,15 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(c6e1IntSet.Len())
+		testIntSet := intset.IntSet{}
+		testIntSet.Add(5)
+		c6e3IntSet.IntersectWith(&testIntSet)
+		println(c6e3IntSet.String())
 	},
 }
 
 func init() {
-	c6e1Cmd.AddCommand(lenCmd)
+	c6e3Cmd.AddCommand(intersectCmd)
 
 	// Here you will define your flags and configuration settings.
 

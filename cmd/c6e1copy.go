@@ -3,7 +3,6 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"the-go-programming-language/internal/methods/intset"
 )
 
 // copyCmd copies the intset
@@ -17,12 +16,8 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		intSet := intset.IntSet{}
-		intSet.Add(1)
-		intSet.Add(44)
-		intSet.Add(9)
-		fmt.Println(intSet.String())
-		copiedIntSet := intSet.Copy()
+		fmt.Println(c6e1IntSet.String())
+		copiedIntSet := c6e1IntSet.Copy()
 		fmt.Println(copiedIntSet.String())
 	},
 }
