@@ -162,3 +162,24 @@ func (s *IntSet) SymmetricDifference(t *IntSet) {
 		}
 	}
 }
+
+func (s *IntSet) Elems() []int {
+	if s.Len() == 0 {
+		return nil // set is empty and this is the zero value of a slice
+	}
+	elements := make([]int, 0, s.Len())
+
+	for i, word := range s.Words {
+		if word == 0 {
+			continue // if the word is 0 it does not represent any set members so skip it
+		}
+		for j := 0; j < 64; j++ { // 64 iterations, our word is 64bits longs (uint64)
+			if word&(1<<uint64(j)) != 0 { // check if each bit position is set or not, if its not we dont care about it
+				elements = append(elements, 64*i+j) // convert bitvector position into what it represents in denary
+			}
+		}
+	}
+
+	return elements
+
+}

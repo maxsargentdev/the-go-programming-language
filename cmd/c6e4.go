@@ -1,14 +1,16 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
+	"the-go-programming-language/internal/methods/intset"
 
 	"github.com/spf13/cobra"
 )
+
+var c6e4IntSet intset.IntSet
 
 // c6e4Cmd represents the c6e4 command
 var c6e4Cmd = &cobra.Command{
@@ -21,13 +23,19 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c6e4 called")
+		for k, v := range c6e4IntSet.Elems() {
+			fmt.Printf("%d - %d\n", k, v)
+		}
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c6e4Cmd)
 
+	c6e4IntSet.Add(1)
+	c6e4IntSet.Add(2)
+	c6e4IntSet.Add(3)
+	c6e4IntSet.Add(4)
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
