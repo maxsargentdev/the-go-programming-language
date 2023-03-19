@@ -38,7 +38,7 @@ func (s *IntSet) Add(x int) {
 func (s *IntSet) UnionWith(t *IntSet) {
 	for i, tword := range t.Words {
 		if i < len(s.Words) { // for all the words that also exist in s
-			s.Words[i] &= tword // calculate the intersection with bitwise OR
+			s.Words[i] &= tword // calculate the intersection with bitwise OR (AuB)
 		} else { // for the words that dont exist in s
 			s.Words = append(s.Words, tword) // slap em on the end, this is a UNION after all
 		}
@@ -130,23 +130,35 @@ func (s *IntSet) AddAll(intss ...int) {
 	}
 }
 
-// IntersectWith
+// IntersectWith - Calculates the intersection of the two sets
 func (s *IntSet) IntersectWith(t *IntSet) {
 	for i, tword := range t.Words {
-
-		if i < len(s.Words) { // for all the words that also exist in s
-			s.Words[i] &= tword // calculate the intersection with bitwise AND
-		} // no else needed here, drop the extras they dont intersect
+		if i < len(s.Words) {
+			s.Words[i] &= tword // AND the words (AnB)
+		} else {
+			s.Words = append(s.Words, tword) //
+		}
 	}
 }
 
-// DifferenceWith
+// DifferenceWith - Calculates the difference of the two sets
 func (s *IntSet) DifferenceWith(t *IntSet) {
-	// this is just what is in t that is not in s
-
+	for i, tword := range t.Words {
+		if i < len(s.Words) {
+			s.Words[i] &^= tword // AND NOT (bit clear) (A n B') What is in A AND NOT IN B
+		} else {
+			s.Words = append(s.Words, tword)
+		}
+	}
 }
 
-// SymemetricDifference
-func (s *IntSet) SymemetricDifference(t *IntSet) {
-
+// SymmetricDifference - Calculates the symettricdifference of the two sets
+func (s *IntSet) SymmetricDifference(t *IntSet) {
+	for i, tword := range t.Words {
+		if i < len(s.Words) {
+			s.Words[i] ^= tword // XOR (exclusive or) union of members which appear only in one of either set
+		} else {
+			s.Words = append(s.Words, tword)
+		}
+	}
 }
