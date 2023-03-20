@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"the-go-programming-language/internal/methods/intset"
 )
 
 // clearCmd clears the intset
@@ -15,7 +16,10 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-
+		testIntSet := intset.IntSet{}
+		testIntSet.Add(5)
+		c6e3IntSet.SymmetricDifference(&testIntSet)
+		println(c6e3IntSet.String())
 	},
 }
 

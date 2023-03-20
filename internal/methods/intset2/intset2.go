@@ -1,4 +1,4 @@
-package intset
+package intset2
 
 import (
 	"bytes"
@@ -10,18 +10,43 @@ import (
 // An IntSet is a set of small non-negative integers.
 // Its zero value represents the empty set.
 type IntSet struct {
-	Words []uint64 // export this in my example
+	Words []uint // export this in my example
 }
+
+const uintSize = 32 << (^uint(0) >> 63)
+
+// 4bytes = uint32
+// 8bytes = uint64
+//
+//^uint(0) is the uint value in which all bits are set.
+//Right-shifting the result of the first step by 63 yields
+//
+// 1 bit set on a 64 bit platform
+// 0 bits set on a 32 bit platform
+//
+//
+//Right shift all the way 63, a 32 bit word of 1s will clear and a 64bit word of 1s will be 1 bit left (the bit representing 32 prev)
+//Left shift back 32 will create a value of either 32 or 64
+//
+//0 on a 32-bit architecture, and
+//1 on a 64-bit architecture.
+//
+//Left-shifting 32 by as many places as the result of the second step yields
+//
+//32 on a 32-bit architecture, and
+//64 on a 64-bit architecture.
+//
+//We are detecting whether or not its possible for us to set the 33rd bit, which has a denary value of 64
 
 // Has reports whether the set contains the non-negative value x.
 func (s *IntSet) Has(x int) bool {
-	word, bit := x/64, uint64(x%64)
+	word, bit := x/uintSize, uint(x%uintSize)
 	return word < len(s.Words) && s.Words[word]&(1<<bit) != 0
 }
 
 // Add adds the non-negative value x to the set.
 func (s *IntSet) Add(x int) {
-	word, bit := x/64, uint64(x%64)
+	word, bit := x/uintSize, uint(x%uintSize)
 	for word >= len(s.Words) {
 		s.Words = append(s.Words, 0)
 	}
@@ -51,12 +76,12 @@ func (s *IntSet) String() string {
 		if word == 0 {
 			continue
 		}
-		for j := 0; j < 64; j++ {
-			if word&(1<<uint64(j)) != 0 {
+		for j := 0; j < uintSize; j++ {
+			if word&(1<<uint(j)) != 0 {
 				if buf.Len() > len("{") {
 					buf.WriteByte(' ')
 				}
-				fmt.Fprintf(&buf, "%d", 64*i+j)
+				fmt.Fprintf(&buf, "%d", uintSize*i+j)
 			}
 		}
 	}
@@ -76,7 +101,7 @@ func (s *IntSet) Len() int {
 }
 
 // Returns number of 1 bits
-func popcount(x uint64) (count int) {
+func popcount(x uint) (count int) {
 	for x != 0 {
 		count++
 		x &= x - 1
@@ -85,21 +110,8 @@ func popcount(x uint64) (count int) {
 }
 
 func (s *IntSet) Remove(x int) {
-	//word, bit := x/64, uint(x%64)
-	//fmt.Println("word:", word)
-	//fmt.Println("bit (0 index):", bit)
-	//fmt.Printf("integer: %d\n", uint64(s.Words[bit]))
-	//
-	//fmt.Printf("binary: %b\n", ^uint64(0))
-	//fmt.Printf("binary: %b\n", (uint64(1) << bit))
-	//fmt.Printf("binary: %b\n", (^uint64(0))^(uint64(1)<<bit))
-	//fmt.Printf("binary: %b\n", s.Words)
-	//mask := (^uint64(0)) ^ (uint64(1) << bit)
-	//
-	//s.Words[word] &= mask
-	//fmt.Printf("%v\n", *s)
 	if s.Has(x) {
-		word, bit := x/64, uint(x%64)
+		word, bit := x/uintSize, uint(x%uintSize)
 		s.Words[word] &^= 1 << bit
 	}
 }
@@ -109,7 +121,7 @@ func (s *IntSet) Clear() {
 }
 
 func (s *IntSet) Copy() *IntSet {
-	var copyOfWords []uint64
+	var copyOfWords []uint
 
 	for _, ele := range s.Words {
 		copyOfWords = append(copyOfWords, ele)
@@ -165,11 +177,11 @@ func (s *IntSet) Elems() []int {
 
 	for i, word := range s.Words {
 		if word == 0 {
-			continue // if the word is 0 it does not represent any set members so skip it
+			continue
 		}
-		for j := 0; j < 64; j++ { // 64 iterations, our word is 64bits longs (uint64)
-			if word&(1<<uint64(j)) != 0 { // check if each bit position is set or not, if its not we dont care about it
-				elements = append(elements, 64*i+j) // convert bitvector position into what it represents in denary
+		for j := 0; j < uintSize; j++ {
+			if word&(1<<uint(j)) != 0 {
+				elements = append(elements, uintSize*i+j)
 			}
 		}
 	}
