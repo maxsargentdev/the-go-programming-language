@@ -1,13 +1,13 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
 	"fmt"
-
 	"github.com/spf13/cobra"
+	"os"
+	"the-go-programming-language/internal/interfaces/counter"
 )
 
 // c7e2Cmd represents the c7e2 command
@@ -21,7 +21,10 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c7e2 called")
+
+		bytesOutWriter, _ := counter.CWriter{}
+		bytesOutWriter.Write([]byte(("I am a string")))
+		fmt.Printf("I wrote %s bytes!", bytesOutWriter.)
 	},
 }
 

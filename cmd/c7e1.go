@@ -21,16 +21,20 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		var c counter.WordCounter
-		var m string = `
-			I am a multi line
+		var wc counter.WordCounter
+		var lc counter.LineCounter
+
+		var m string = `I am a multi line
 			string
 			count me
 			in`
-		//c.Write([]byte(m))
-		//fmt.Println(c) // WordCounter satisfies the io.Writer interface and thus we can use it
-		fmt.Fprintf(&c, "%s", m) // and we can use it here
-		fmt.Println(c)
+
+		// both types satisfy the io.Writer interface and thus we can use Fprintf
+		fmt.Fprintf(&wc, "%s", m)
+		fmt.Println(wc)
+
+		fmt.Fprintf(&lc, "%s", m)
+		fmt.Println(lc)
 	},
 }
 
