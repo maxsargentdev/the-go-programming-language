@@ -4,9 +4,9 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/spf13/cobra"
-	"os"
 	"the-go-programming-language/internal/interfaces/counter"
 )
 
@@ -21,10 +21,10 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-
-		bytesOutWriter, _ := counter.CWriter{}
-		bytesOutWriter.Write([]byte(("I am a string")))
-		fmt.Printf("I wrote %s bytes!", bytesOutWriter.)
+		var buf bytes.Buffer
+		bytesOutWriter := counter.CWriter{Counter: 0, Writer: &buf}
+		bytesOutWriter.Write([]byte(("I am a string!")))
+		fmt.Printf("I wrote %d bytes!", bytesOutWriter.Counter)
 	},
 }
 
