@@ -1,11 +1,13 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
+	"bytes"
 	"fmt"
+	"strings"
+	"the-go-programming-language/internal/interfaces/parser"
 
 	"github.com/spf13/cobra"
 )
@@ -21,7 +23,11 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c7e5 called")
+		s := "abcdefghijklmnopqrtsuvwxyz"
+		b := &bytes.Buffer{}
+		r := parser.LimitReader(strings.NewReader(s), 4)
+		n, _ := b.ReadFrom(r)
+		fmt.Printf("%d bytes read: %s", n, b.String())
 	},
 }
 
