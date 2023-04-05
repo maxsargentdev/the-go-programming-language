@@ -1,11 +1,12 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
+	"flag"
 	"fmt"
+	"the-go-programming-language/internal/interfaces/tempflag"
 
 	"github.com/spf13/cobra"
 )
@@ -21,13 +22,16 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("c7e6 called")
+		var temp = tempflag.CelsiusFlag("temp", "t", 20.0, "the temperature")
+		flag.Parse()
+		fmt.Println(*temp)
+
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c7e6Cmd)
-
+	c7e6Cmd.Flags().Var()
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
