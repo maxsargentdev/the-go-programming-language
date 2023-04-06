@@ -8,25 +8,28 @@ import (
 type CelsiusFlagType struct{ Celsius }
 
 // pflags package requires implementing the Value interface, which means implementing below String()/Type()/Set()
-func (f *CelsiusFlagType) String() string {
+// this is for the value the flag contains
+func (f CelsiusFlagType) String() string {
 	return f.Celsius.String()
 }
 
-func (f *CelsiusFlagType) Type() string {
-	t, _ := fmt.Printf("%T", f)
+func (f CelsiusFlagType) Type() string {
+	t := fmt.Sprintf("%T", f)
 	return t
 }
 
-func (f *CelsiusFlagType) Set(s string) error {
+func (f CelsiusFlagType) Set(s string) error {
 	var unit string
 	var value float64
 	fmt.Sscanf(s, "%f%s", &value, &unit) // no error check needed
 	switch unit {
 	case "C", "°C":
 		f.Celsius = Celsius(value)
+		fmt.Println(f.Celsius)
 		return nil
 	case "F", "°F":
 		f.Celsius = FToC(Fahrenheit(value))
+		fmt.Println(f.Celsius)
 		return nil
 	}
 	return fmt.Errorf("invalid temperature %q", s)
