@@ -26,11 +26,12 @@ to quickly create a Cobra application.`,
 
 func init() {
 	rootCmd.AddCommand(c7e6Cmd)
-	//flag := tempflag.CelsiusFlag("temp", "t", 20.0, "the temperature")
+
+	// should move this into tempflag.CelsiusFlag fo complete example properly
 	c7e6Cmd.Flags().AddFlag(&pflag.Flag{
 		Name:      "temp",
 		Shorthand: "t",
-		Usage:     "convert C to K or K to C",
+		Usage:     "convert any temperature to its celsius value",
 		Value:     tempflag.CelsiusFlagType{},
 		DefValue:  "20C",
 	})

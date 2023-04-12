@@ -31,6 +31,10 @@ func (f CelsiusFlagType) Set(s string) error {
 		f.Celsius = FToC(Fahrenheit(value))
 		fmt.Println(f.Celsius)
 		return nil
+	case "K", "°K":
+		f.Celsius = KtoC(Kelvin(value))
+		fmt.Println(f.Celsius)
+		return nil
 	}
 	return fmt.Errorf("invalid temperature %q", s)
 }
@@ -62,3 +66,27 @@ func KtoC(f Kelvin) Celsius     { return Celsius(f + 273.15) }
 func KtoF(f Kelvin) Fahrenheit  { return Fahrenheit((f-273.15)*9/5 + 32) }
 func FtoK(f Fahrenheit) Kelvin  { return Kelvin(((f - 32) * 5 / 9) + 273.15) }
 func CtoK(f Celsius) Kelvin     { return Kelvin(f - 273.15) }
+
+func CobraOutput() {
+	fmt.Println(`
+	Chapter 7 Exercise 7 has no executable program, heres a description instead:
+	
+	The exercise asked for why the help message contains degrees C unit, when the default value doesnt.
+	This isnt strictly true for our effort.
+	
+	---------------------------------------------------------------------------------------------
+	
+	The reason for this is that the default value is a float64 however when it is read in via pflags
+	it is wrapped in the CelsisusFlagType. This type is a wrapper around the underlying Celsius type 
+	that satisfies a few interfaces, one of them is the stringer interface. 
+
+	CelsiusFlagType -> Celsius -> Float64
+
+	A float64 also satisfies this interface, and is what is used to display the 20.0 format.
+	If we print a Celsius type we print with the units by calling its own String method.
+
+
+	
+	---------------------------------------------------------------------------------------------
+			`)
+}
