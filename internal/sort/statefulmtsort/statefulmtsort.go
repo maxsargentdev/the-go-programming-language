@@ -17,22 +17,29 @@ type Track struct {
 	Length time.Duration
 }
 
+type Pair[T, U any] struct {
+	First  T
+	Second U
+}
+
 type multiTierSort struct {
-	t []*Track
-	tier1
+	t            []*Track
+	primaryKey   string
+	secondaryKey string
+	tertiaryKey  string
 }
 
 func (x multiTierSort) Len() int      { return len(x.t) }
 func (x multiTierSort) Swap(i, j int) { x.t[i], x.t[j] = x.t[j], x.t[i] }
 func (x multiTierSort) Less(i, j int) bool {
-	if x.t != y.Title {
-		return x.Title < y.Title
+	if x.t[i].Title != x.t[j].Title {
+		return x.t[i].Title < x.t[j].Title
 	}
-	if x.Year != y.Year {
-		return x.Year < y.Year
+	if x.t[i].Year != x.t[j].Year {
+		return x.t[i].Year < x.t[j].Year
 	}
-	if x.Length != y.Length {
-		return x.Length < y.Length
+	if x.t[i].Length != x.t[j].Length {
+		return x.t[i].Length < x.t[j].Length
 	}
 	return false
 }
