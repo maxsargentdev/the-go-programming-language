@@ -5,7 +5,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"the-go-programming-language/internal/sort/statefulmtsort"
+	"the-go-programming-language/chapters/7-interfaces/c7e8"
 )
 
 // c7e8Cmd represents the c7e8 command
@@ -19,7 +19,7 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		statefulmtsort.RunStatefulMTSort()
+		c7e8.Run()
 	},
 }
 
