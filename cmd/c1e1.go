@@ -1,40 +1,28 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
-	tutorial "the-go-programming-language/internal/tutorial"
-
 	"github.com/spf13/cobra"
+	"the-go-programming-language/chapters/1-tutorial/c1e1"
 )
 
 // c1e1Cmd represents the c1e1 command
 var c1e1Cmd = &cobra.Command{
 	Use:   "c1e1",
 	Short: "Chapter 1 Exercise 1 - Echo with command name",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Long: `Chapter 1 Exercise 1 - Echo with command name
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+This command provides the similar functionality as the shell utility echo,
+minus the fact that this command also echos the name of the command.
+
+Example:
+./the-go-programming-language c1e1 <arguments to echo>
+./the-go-programming-language c1e1 hello world
+`,
 	Run: func(cmd *cobra.Command, args []string) {
-		tutorial.EchoWithCommandName()
+		c1e1.EchoWithCommandName()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c1e1Cmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// c1e1Cmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// c1e1Cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
