@@ -11,12 +11,17 @@ var c1e1Cmd = &cobra.Command{
 	Short: "Chapter 1 Exercise 1 - Echo with command name",
 	Long: `Chapter 1 Exercise 1 - Echo with command name
 
-This command provides the similar functionality as the shell utility echo,
-minus the fact that this command also echos the name of the command.
+Description:
+This command provides the similar functionality as the shell utility echo.
+This command also echos the name of the command.
 
 Example:
 ./the-go-programming-language c1e1 <arguments to echo>
 ./the-go-programming-language c1e1 hello world
+
+Notes:
+Because we have completed this book as a CLI app, both the binary being executed & the subcommand c1e1 are echoed.
+You can adjust this behaviour by manipulating the os.Args slice.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		c1e1.EchoWithCommandName()

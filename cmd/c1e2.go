@@ -1,40 +1,33 @@
-/*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
-*/
 package cmd
 
 import (
-	"the-go-programming-language/internal/tutorial"
-
 	"github.com/spf13/cobra"
+	"the-go-programming-language/chapters/1-tutorial/c1e2"
 )
 
 // c1e2Cmd represents the c1e2 command
 var c1e2Cmd = &cobra.Command{
 	Use:   "c1e2",
-	Short: "Chapter 1 Exercise 2 - Multiline echo with index & value",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Chapter 1 Exercise 2 - Echo with index and arguments",
+	Long: `Chapter 1 Exercise 2 - Echo with index and arguments"
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Description:
+This command provides the similar functionality as the shell utility echo.
+This command echos the index of the argument as well as the argument, on new lines.
+
+Example:
+./the-go-programming-language c1e2 <arguments to echo>
+./the-go-programming-language c1e2 hello world
+
+Notes:
+Because we have completed this book as a CLI app, both the binary being executed & the subcommand c1e1 are echoed.
+You can adjust this behaviour by manipulating the start index of the for loop.
+`,
 	Run: func(cmd *cobra.Command, args []string) {
-		tutorial.EchoWithIndexAndValue()
+		c1e2.EchoWithIndexAndArguments()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(c1e2Cmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// c1e2Cmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// c1e2Cmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
