@@ -20,8 +20,8 @@ Example:
 ./the-go-programming-language c1e2 hello world
 
 Notes:
-Because we have completed this book as a CLI app, both the binary being executed & the subcommand c1e1 are echoed.
-You can adjust this behaviour by manipulating the start index of the for loop.
+Because we have completed this book as a CLI app, both the binary being executed & the subcommand c1e1 were echoed.
+We adjusted this behaviour by loop index.
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		c1e2.EchoWithIndexAndArguments()

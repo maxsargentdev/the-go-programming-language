@@ -1,27 +1,37 @@
 /*
 Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
 import (
-	"the-go-programming-language/internal/tutorial"
-
 	"github.com/spf13/cobra"
+	"the-go-programming-language/chapters/1-tutorial/c1e3"
 )
 
 // c1e3Cmd represents the c1e3 command
 var c1e3Cmd = &cobra.Command{
 	Use:   "c1e3",
-	Short: "Chapter 1 Exercise 3 - Difference in running times of echo programs",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Chapter 1 Exercise 3 - Comparing the performance of two echo functions",
+	Long: `Chapter 1 Exercise 3 - Comparing the performance of two echo functions"
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Description:
+This command compares the speed of two different implementations of an echo.
+The first recreates the string each iteration causing some wasted memory usage.
+The second uses the strings.Join which concatenates the existing strings.
+
+Example:
+./the-go-programming-language c1e3 <arguments to echo>
+./the-go-programming-language c1e3 hello world
+
+Notes:
+Because we have completed this book as a CLI app, both the binary being executed & the subcommand c1e1 were echoed.
+We adjusted this behaviour by manipulating the os.Args slice and the loop index.
+
+To-Do:
+Upgrade this command to take a flag that specifies whether or not to take the binary being executed as an item.
+`,
 	Run: func(cmd *cobra.Command, args []string) {
-		tutorial.TimedEchoTest()
+		c1e3.TimedEchoTest()
 	},
 }
 
